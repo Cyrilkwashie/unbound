@@ -4,9 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useBag } from "@/context/BagContext";
 import { ProductPhoto } from "@/components/ProductPhoto";
-import type { CatalogProduct } from "@/lib/products";
-
-const SIZES = ["XS", "S", "M", "L", "XL"] as const;
+import { GARMENT_SIZES, type CatalogProduct, type GarmentSize } from "@/lib/products";
 
 type ProductCardProps = {
   product: CatalogProduct;
@@ -15,7 +13,9 @@ type ProductCardProps = {
 
 export const ProductCard = ({ product, reverse = false }: ProductCardProps) => {
   const { addItem } = useBag();
-  const [size, setSize] = useState<(typeof SIZES)[number]>("M");
+  const sizes = product.sizes?.length ? product.sizes : [...GARMENT_SIZES];
+  const [size, setSize] = useState<GarmentSize>(sizes.includes("M") ? "M" : sizes[0]);
+  const [color, setColor] = useState(product.colors[0]?.label ?? product.color);
   const [added, setAdded] = useState(false);
 
   const add = () => {
@@ -24,7 +24,7 @@ export const ProductCard = ({ product, reverse = false }: ProductCardProps) => {
       name: product.name,
       price: product.price,
       size,
-      color: product.color,
+      color,
     });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1600);
@@ -70,14 +70,20 @@ export const ProductCard = ({ product, reverse = false }: ProductCardProps) => {
         <p className="mt-10 font-serif text-3xl italic text-ivory">${product.price}</p>
 
         <div className="mt-10">
-          <p className="text-[10px] tracking-[0.28em] text-mist">COLOR — {product.color}</p>
+          <p className="text-[10px] tracking-[0.28em] text-mist">COLOR — {color}</p>
           <div className="mt-3 flex gap-2">
             {product.colors.map((swatch) => (
-              <div
+              <button
                 key={swatch.label}
-                className="h-5 w-5 border border-ivory/40"
+                type="button"
+                onClick={() => setColor(swatch.label)}
+                className={`h-5 w-5 border ${
+                  color === swatch.label ? "border-ivory" : "border-ivory/40"
+                }`}
                 style={{ backgroundColor: swatch.hex }}
                 title={swatch.label}
+                aria-pressed={color === swatch.label}
+                data-cursor="VIEW"
               />
             ))}
           </div>
@@ -86,7 +92,7 @@ export const ProductCard = ({ product, reverse = false }: ProductCardProps) => {
         <fieldset className="mt-10">
           <legend className="text-[10px] tracking-[0.28em] text-mist">SIZE</legend>
           <div className="mt-4 flex flex-wrap gap-2">
-            {SIZES.map((option) => (
+            {sizes.map((option) => (
               <button
                 key={option}
                 type="button"

@@ -20,7 +20,7 @@ export const HomeStatement = () => {
         className="mt-8 max-w-5xl font-display text-[clamp(2.4rem,8vw,6.2rem)] font-light leading-[0.92] tracking-[0.12em] text-ivory"
         {...fade}
       >
-        CUT FOR MOTION
+        BAGGY ON THE RAIL
       </motion.h2>
       <div className="editorial-line mt-12 w-16" />
       <motion.div
@@ -28,8 +28,8 @@ export const HomeStatement = () => {
         {...fade}
       >
         <p className="max-w-md text-sm leading-8 text-mist">
-          The film is the house. What follows is the line — oversized, heavyweight,
-          cut to move. Two opening garments. The rest waits in the shop.
+          The film is the house. The shop is baggy clothes — oversized,
+          heavyweight, waiting on the rail. Two opening pieces. The rest is yours.
         </p>
         <Link
           href="/shop"

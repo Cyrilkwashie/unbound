@@ -20,6 +20,9 @@ export const SHOP_CATEGORIES = [
 export type ShopCategory = (typeof SHOP_CATEGORIES)[number]["id"];
 export type ProductCategory = Exclude<ShopCategory, "all">;
 
+export const GARMENT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
+export type GarmentSize = (typeof GARMENT_SIZES)[number];
+
 export type CatalogProduct = {
   id: string;
   look: string;
@@ -29,12 +32,16 @@ export type CatalogProduct = {
   price: number;
   color: string;
   colors: { label: string; hex: string }[];
+  sizes?: GarmentSize[];
   description: string;
   image: string;
   imageFit: "contain" | "cover";
   imageBg: string;
   status: "available" | "forthcoming";
 };
+
+export const isGarmentSize = (value: string): value is GarmentSize =>
+  (GARMENT_SIZES as readonly string[]).includes(value);
 
 const SWATCH_HEX: Record<string, string> = {
   BLACK: "#111111",
@@ -87,6 +94,17 @@ export const featuredFrom = (products: CatalogProduct[], featuredIds: string[]) 
   return availableFrom(products).slice(0, 2);
 };
 
+export const normalizeProduct = (product: CatalogProduct): CatalogProduct => {
+  const sizes = (product.sizes ?? []).filter(isGarmentSize);
+  const colors = product.colors?.length ? product.colors : swatchesFromColor(product.color);
+  return {
+    ...product,
+    sizes: sizes.length > 0 ? sizes : [...GARMENT_SIZES],
+    colors,
+    color: product.color?.trim() || colors.map((swatch) => swatch.label).join(" / ").toUpperCase() || "BLACK",
+  };
+};
+
 const SWATCH_BLACK = [{ label: "Black", hex: "#111111" }];
 const SWATCH_LAYERED = [
   { label: "Black", hex: "#111111" },
@@ -104,7 +122,7 @@ export const SEED_CATALOG: CatalogProduct[] = [
     color: "BLACK / WHITE",
     colors: SWATCH_LAYERED,
     description:
-      "Oversized layered tee — black over white. Thorn graphic across the chest, sleeve marks down the arms. Cut to drape, not to fit in.",
+      "Oversized layered tee — black over white. Thorn graphic across the chest, sleeve marks down the arms. Drapes rather than fits in.",
     image: PRODUCT_IMAGES.baggyTop,
     imageFit: "contain",
     imageBg: "#cfc9c0",
@@ -120,7 +138,7 @@ export const SEED_CATALOG: CatalogProduct[] = [
     color: "BLACK",
     colors: SWATCH_BLACK,
     description:
-      "Architectural pockets. Relaxed fall. Gothic cross marks down the leg. Cut to travel with the body, not against it.",
+      "Architectural pockets. Relaxed fall. Gothic cross marks down the leg. Travels with the body, not against it.",
     image: PRODUCT_IMAGES.cargo,
     imageFit: "cover",
     imageBg: "#eceae4",
@@ -136,7 +154,7 @@ export const SEED_CATALOG: CatalogProduct[] = [
     color: "BLACK / WHITE",
     colors: SWATCH_LAYERED,
     description:
-      "The lighter cut of the layered system. Same thorn mark, shorter drape, built to sit under outer pieces.",
+      "The lighter layer of the system. Same thorn mark, shorter drape, worn under outer pieces.",
     image: PRODUCT_IMAGES.baggyTop,
     imageFit: "contain",
     imageBg: "#cfc9c0",
@@ -168,7 +186,7 @@ export const SEED_CATALOG: CatalogProduct[] = [
     color: "BLACK / WHITE",
     colors: SWATCH_LAYERED,
     description:
-      "A shell for movement. Layered construction, open through the body, cut to ride over the baggy top.",
+      "A shell for movement. Layered, open through the body, worn over the baggy top.",
     image: PRODUCT_IMAGES.baggyTop,
     imageFit: "contain",
     imageBg: "#cfc9c0",
@@ -200,7 +218,7 @@ export const SEED_CATALOG: CatalogProduct[] = [
     color: "BLACK",
     colors: SWATCH_BLACK,
     description:
-      "The cargo without the shout. Cleaner face, same relaxed fall, still cut to travel with the body.",
+      "The cargo without the shout. Cleaner face, same relaxed fall, still travels with the body.",
     image: PRODUCT_IMAGES.cargo,
     imageFit: "cover",
     imageBg: "#eceae4",
@@ -248,7 +266,7 @@ export const SEED_CATALOG: CatalogProduct[] = [
     color: "BLACK",
     colors: SWATCH_BLACK,
     description:
-      "Utility without costume. Pocket stack, wide leg, a work pant cut for the street.",
+      "Utility without costume. Pocket stack, wide leg, a work pant for the street.",
     image: PRODUCT_IMAGES.cargo,
     imageFit: "cover",
     imageBg: "#eceae4",

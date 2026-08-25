@@ -2,7 +2,12 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "
 import { tmpdir } from "os";
 import { dirname, join } from "path";
 import { SEED_BOOKS, type HouseBooks } from "@/lib/atelier-books";
-import { SEED_CATALOG, SEED_FEATURED_IDS, type CatalogProduct } from "@/lib/products";
+import {
+  SEED_CATALOG,
+  SEED_FEATURED_IDS,
+  normalizeProduct,
+  type CatalogProduct,
+} from "@/lib/products";
 
 export type LineFile = {
   products: CatalogProduct[];
@@ -47,11 +52,21 @@ const writeSafe = (path: string, fallback: string, value: unknown) => {
   }
 };
 
-export const readLine = (): LineFile =>
-  readJson<LineFile>(runtimeLine) ?? readJson<LineFile>(committedLine) ?? seedLine();
+export const readLine = (): LineFile => {
+  const line = readJson<LineFile>(runtimeLine) ?? readJson<LineFile>(committedLine) ?? seedLine();
+  return {
+    ...line,
+    products: (line.products ?? []).map(normalizeProduct),
+    featuredIds: line.featuredIds ?? [],
+  };
+};
 
 export const writeLine = (line: LineFile) => {
-  writeSafe(runtimeLine, join(tmpdir(), "unbound-line.json"), line);
+  writeSafe(runtimeLine, join(tmpdir(), "unbound-line.json"), {
+    ...line,
+    products: (line.products ?? []).map(normalizeProduct),
+    featuredIds: line.featuredIds ?? [],
+  });
 };
 
 export const readBooks = (): HouseBooks =>

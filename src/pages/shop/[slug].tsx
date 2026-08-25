@@ -34,7 +34,7 @@ export default function ShopProductPage({ product, related }: ShopProductPagePro
 
         {related.length > 0 ? (
           <section className="border-t border-ivory/10 px-5 py-20 md:px-10 md:py-28">
-            <p className="text-[10px] tracking-[0.32em] text-mist">ALSO IN THE HOUSE</p>
+            <p className="text-[10px] tracking-[0.32em] text-mist">ALSO ON THE RAIL</p>
             <div className="mt-12 grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-8">
               {related.map((item, index) => (
                 <ShopTile key={item.id} product={item} index={index} />

@@ -9,7 +9,7 @@ export default function StoryPage() {
     <InnerPage
       title="STORY"
       kicker="THE HOUSE — EST. 2026"
-      description="UNBOUND is a state of mind. Movement, individuality, and the refusal of conventional boundaries."
+      description="UNBOUND. A shop of baggy clothes — dark, oversized, on the rail."
     >
       <section className="px-5 pb-20 md:px-10 md:pb-28">
         <motion.p
@@ -18,7 +18,7 @@ export default function StoryPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          Not made to follow. Cut for those who move without asking.
+          A shop of baggy clothes. Dark. Oversized. Waiting.
         </motion.p>
         <motion.p
           className="mt-10 max-w-xl text-sm leading-8 text-mist"
@@ -26,9 +26,8 @@ export default function StoryPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          UNBOUND began as a refusal — of the prescribed silhouette, of clothing that performs
-          stillness. Collection 001 is the first argument: dark, precise, and built around the
-          space the body occupies in motion.
+          UNBOUND holds the oversized line — tops, cargos, outer — heavyweight and on
+          the rail. Collection 001 is here for you. Take what you want.
         </motion.p>
       </section>
 

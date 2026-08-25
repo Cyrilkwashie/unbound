@@ -23,11 +23,11 @@ export default function ContactPage() {
     <InnerPage
       title="CONTACT"
       kicker="THE HOUSE"
-      description="UNBOUND — email and socials."
+      description="UNBOUND — write, follow, stay close to the shop."
     >
       <section className="border-t border-ivory/10 px-5 py-16 md:px-10 md:py-24">
         <p className="max-w-md font-serif text-2xl italic text-ivory md:text-3xl">
-          Write. Follow. Stay close to the line.
+          Write. Follow. Stay close to the shop.
         </p>
 
         <ul className="mt-20">

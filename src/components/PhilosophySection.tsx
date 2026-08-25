@@ -35,10 +35,8 @@ export const PhilosophySection = () => {
           viewport={{ once: true }}
           transition={{ duration: 1.1, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
         >
-          We design for those who refuse the prescribed silhouette. Movement is not a feature —
-          it is the starting point. Each garment is cut to follow the body in motion, not to
-          confine it. Collection 001 is an argument against the expected: dark, precise, and
-          unapologetically individual.
+          UNBOUND is a shop of baggy clothes. Oversized tops, cargos, outer — dark,
+          heavyweight, waiting on the rail. The line is here. Take it.
         </motion.p>
       </div>
     </section>

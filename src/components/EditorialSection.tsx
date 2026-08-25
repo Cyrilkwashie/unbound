@@ -38,7 +38,7 @@ export const EditorialSection = () => {
           Beyond the expected.
         </h2>
         <p className="mt-10 max-w-md text-sm leading-7 text-ivory/75">
-          Not louder. Clearer. A study in proportion, shadow, and the space around the body.
+          Baggy. Dark. Yours from the rail.
         </p>
       </motion.div>
     </section>

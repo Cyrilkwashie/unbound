@@ -13,7 +13,7 @@ export default function ShopPage({ products }: ShopPageProps) {
     <InnerPage
       title="SHOP"
       kicker="COLLECTION 001"
-      description="Shop UNBOUND. Oversized tops, cargos, and the garments that follow."
+      description="The UNBOUND shop. Baggy tops, cargos, and the rest of the rail."
     >
       <ShopIndex products={products} />
     </InnerPage>

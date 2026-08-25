@@ -37,7 +37,7 @@ export const HomeLooks = ({
           </h2>
         </motion.div>
         <motion.p className="hidden max-w-xs text-right text-sm leading-7 text-mist md:block" {...fade}>
-          Not a catalog. The two garments the film was cut around.
+          Two baggy looks from the film. Now yours.
         </motion.p>
       </div>
 

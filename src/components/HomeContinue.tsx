@@ -41,8 +41,8 @@ export const HomeContinue = () => {
             UNBOUND IS A STATE OF MIND
           </h2>
           <p className="mt-8 max-w-sm text-sm leading-8 text-mist">
-            Movement is the starting point. Collection 001 is the first argument —
-            dark, precise, and built around the space the body occupies in motion.
+            A shop for baggy clothes. Collection 001 waits on the rail —
+            oversized, heavyweight, dark. Come take it.
           </p>
           <Link
             href="/story"

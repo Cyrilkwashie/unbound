@@ -76,7 +76,7 @@ export const Hero = () => {
             UNBOUND
           </h1>
           <p className="mt-10 font-sans text-[11px] tracking-[0.22em] text-ivory/80">
-            NOT MADE TO FOLLOW.
+            NOT HERE TO FOLLOW.
           </p>
         </div>
       </section>
@@ -119,7 +119,7 @@ export const Hero = () => {
           ref={followRef}
           className="absolute bottom-[12%] left-[6%] z-10 max-w-[14rem] font-sans text-[11px] leading-6 tracking-[0.22em] text-ivory/90 opacity-0 md:bottom-[14%] md:left-[8%] md:max-w-none md:text-[12px]"
         >
-          UNBOUND / NOT MADE TO FOLLOW.
+          UNBOUND / NOT HERE TO FOLLOW.
         </p>
 
         <p

@@ -1,7 +1,9 @@
 import {
   slugify,
   swatchesFromColor,
+  isGarmentSize,
   type CatalogProduct,
+  type GarmentSize,
   type ProductCategory,
 } from "@/lib/products";
 
@@ -21,6 +23,8 @@ export type LinePayload = {
   imageBg?: string;
   status?: string;
   featured?: boolean;
+  colors?: { label?: string; hex?: string }[];
+  sizes?: string[];
 };
 
 export const productFromPayload = (
@@ -39,13 +43,28 @@ export const productFromPayload = (
   if (!Number.isFinite(price) || price < 0) return { error: "Price must be a number." };
 
   const look = (body.look?.trim() || options.look || "01").padStart(2, "0").slice(-2);
-  const color = body.color?.trim().toUpperCase() || "BLACK";
+  const colors = (body.colors ?? [])
+    .map((swatch) => ({
+      label: (swatch.label ?? "").trim() || "BLACK",
+      hex: /^#?[0-9a-fA-F]{6}$/.test((swatch.hex ?? "").trim())
+        ? (swatch.hex ?? "").trim().startsWith("#")
+          ? (swatch.hex ?? "").trim()
+          : `#${(swatch.hex ?? "").trim()}`
+        : "#111111",
+    }))
+    .filter((swatch) => swatch.label);
+  const palette = colors.length > 0 ? colors : swatchesFromColor(body.color ?? "BLACK");
+  const color =
+    body.color?.trim().toUpperCase() || palette.map((swatch) => swatch.label).join(" / ").toUpperCase();
+  const sizes = (body.sizes ?? []).filter(isGarmentSize);
   const kicker =
     body.kicker?.trim().toUpperCase() || `GARMENT ${look} / ${category.toUpperCase()}`;
   const image = body.image?.trim() || "/baggy top.jpg";
   const imageFit = body.imageFit === "cover" ? "cover" : "contain";
   const imageBg = body.imageBg?.trim() || (category === "bottoms" ? "#eceae4" : "#cfc9c0");
   const status = body.status === "forthcoming" ? "forthcoming" : "available";
+
+  if (sizes.length === 0) return { error: "Choose at least one size." };
 
   return {
     id: options.id || slugify(name),
@@ -55,7 +74,8 @@ export const productFromPayload = (
     category,
     price,
     color,
-    colors: swatchesFromColor(color),
+    colors: palette,
+    sizes: sizes as GarmentSize[],
     description: body.description?.trim() || "",
     image,
     imageFit,

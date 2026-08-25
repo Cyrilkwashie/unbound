@@ -77,7 +77,7 @@ export const ShopIndex = ({ products }: ShopIndexProps) => {
 
       {pieces.length === 0 ? (
         <p className="px-5 py-32 text-center font-serif text-2xl italic text-mist md:px-10">
-          This chapter is still being cut.
+          Nothing on this rail yet.
         </p>
       ) : (
         <div className="grid grid-cols-1 gap-x-5 gap-y-16 px-5 py-14 md:grid-cols-2 md:gap-x-8 md:gap-y-24 md:px-10 md:py-20 lg:grid-cols-2 xl:gap-x-12">

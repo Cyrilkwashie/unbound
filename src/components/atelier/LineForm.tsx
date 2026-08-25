@@ -2,11 +2,21 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
-import type { CatalogProduct } from "@/lib/products";
+import { GARMENT_SIZES, type CatalogProduct, type GarmentSize } from "@/lib/products";
 
 const field =
   "mt-4 w-full border-b border-ivory/20 bg-transparent pb-3 text-sm tracking-[0.08em] text-ivory outline-none";
 const label = "mt-10 block text-[10px] tracking-[0.32em] text-mist first:mt-0";
+
+type Swatch = { label: string; hex: string };
+
+const defaultSwatches = (product?: CatalogProduct): Swatch[] => {
+  if (product?.colors?.length) return product.colors.map((swatch) => ({ ...swatch }));
+  return [{ label: product?.color ?? "BLACK", hex: "#111111" }];
+};
+
+const defaultSizes = (product?: CatalogProduct): GarmentSize[] =>
+  product?.sizes?.length ? [...product.sizes] : [...GARMENT_SIZES];
 
 type LineFormProps = {
   product?: CatalogProduct;
@@ -19,14 +29,36 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
   const [error, setError] = useState("");
   const [featured, setFeatured] = useState(startedFeatured);
   const [image, setImage] = useState(product?.image ?? "/baggy top.jpg");
+  const [colors, setColors] = useState<Swatch[]>(() => defaultSwatches(product));
+  const [sizes, setSizes] = useState<GarmentSize[]>(() => defaultSizes(product));
   const isEdit = Boolean(product);
+  const colorLine = colors
+    .map((swatch) => swatch.label.trim())
+    .filter(Boolean)
+    .join(" / ")
+    .toUpperCase();
 
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (busy) return;
-    setBusy(true);
     setError("");
     const form = new FormData(event.currentTarget);
+    if (sizes.length === 0) {
+      setError("Choose at least one size.");
+      return;
+    }
+    const palette = colors
+      .map((swatch) => ({
+        label: swatch.label.trim(),
+        hex: swatch.hex.trim() || "#111111",
+      }))
+      .filter((swatch) => swatch.label);
+    if (palette.length === 0) {
+      setError("Add at least one color.");
+      return;
+    }
+    setBusy(true);
+
     const payload = {
       id: product?.id,
       name: String(form.get("name") ?? ""),
@@ -34,7 +66,9 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
       kicker: String(form.get("kicker") ?? ""),
       category: String(form.get("category") ?? ""),
       price: String(form.get("price") ?? ""),
-      color: String(form.get("color") ?? ""),
+      color: palette.map((swatch) => swatch.label).join(" / ").toUpperCase(),
+      colors: palette,
+      sizes,
       description: String(form.get("description") ?? ""),
       image,
       imageFit: String(form.get("imageFit") ?? "contain"),
@@ -171,10 +205,130 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
         </div>
       </div>
 
-      <label className={label} htmlFor="piece-color">
-        COLOR
-      </label>
-      <input id="piece-color" name="color" defaultValue={product?.color ?? "BLACK"} className={field} />
+      <div className="mt-10">
+        <p className="text-[10px] tracking-[0.32em] text-mist">COLOR — {colorLine || "—"}</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {colors.map((swatch, index) => (
+            <div
+              key={`${swatch.label}-${index}`}
+              className="h-5 w-5 border border-ivory/40"
+              style={{ backgroundColor: swatch.hex || "#111111" }}
+              title={swatch.label}
+            />
+          ))}
+        </div>
+        <ul className="mt-8 space-y-6">
+          {colors.map((swatch, index) => (
+            <li key={index} className="grid items-end gap-4 md:grid-cols-[auto_1fr_1fr_auto]">
+              <label className="relative block h-10 w-10 shrink-0 border border-ivory/30">
+                <span
+                  className="absolute inset-0"
+                  style={{ backgroundColor: swatch.hex || "#111111" }}
+                />
+                <input
+                  type="color"
+                  value={/^#[0-9a-fA-F]{6}$/.test(swatch.hex) ? swatch.hex : "#111111"}
+                  onChange={(event) =>
+                    setColors((current) =>
+                      current.map((item, i) =>
+                        i === index ? { ...item, hex: event.target.value } : item
+                      )
+                    )
+                  }
+                  className="absolute inset-0 cursor-pointer opacity-0"
+                  aria-label={`Swatch ${index + 1} hex`}
+                />
+              </label>
+              <div>
+                <label className="block text-[10px] tracking-[0.28em] text-mist" htmlFor={`swatch-label-${index}`}>
+                  NAME
+                </label>
+                <input
+                  id={`swatch-label-${index}`}
+                  value={swatch.label}
+                  onChange={(event) =>
+                    setColors((current) =>
+                      current.map((item, i) =>
+                        i === index ? { ...item, label: event.target.value.toUpperCase() } : item
+                      )
+                    )
+                  }
+                  className={field}
+                />
+              </div>
+              <div>
+                <label className="block text-[10px] tracking-[0.28em] text-mist" htmlFor={`swatch-hex-${index}`}>
+                  HEX
+                </label>
+                <input
+                  id={`swatch-hex-${index}`}
+                  value={swatch.hex}
+                  onChange={(event) =>
+                    setColors((current) =>
+                      current.map((item, i) =>
+                        i === index ? { ...item, hex: event.target.value } : item
+                      )
+                    )
+                  }
+                  className={field}
+                />
+              </div>
+              {colors.length > 1 ? (
+                <button
+                  type="button"
+                  onClick={() => setColors((current) => current.filter((_, i) => i !== index))}
+                  className="pb-3 text-[10px] tracking-[0.28em] text-mist"
+                >
+                  DROP
+                </button>
+              ) : (
+                <span />
+              )}
+            </li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          onClick={() => setColors((current) => [...current, { label: "BLACK", hex: "#111111" }])}
+          className="mt-8 text-[10px] tracking-[0.28em] text-ivory"
+        >
+          ADD COLOR
+        </button>
+      </div>
+
+      <fieldset className="mt-10">
+        <legend className="text-[10px] tracking-[0.32em] text-mist">SIZE</legend>
+        <p className="mt-3 text-sm leading-7 text-mist">
+          These are the sizes shown on the piece. Leave a size off to hide it from the shop.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {GARMENT_SIZES.map((option) => {
+            const on = sizes.includes(option);
+            return (
+              <button
+                key={option}
+                type="button"
+                onClick={() =>
+                  setSizes((current) =>
+                    current.includes(option)
+                      ? current.filter((item) => item !== option)
+                      : GARMENT_SIZES.filter((size) => current.includes(size) || size === option)
+                  )
+                }
+                className={`min-w-12 border px-3 py-2 text-[11px] tracking-[0.18em] transition-colors duration-500 ${
+                  on
+                    ? "border-ivory bg-ivory text-void-0"
+                    : "border-ivory/20 text-ivory hover:border-ivory/60"
+                }`}
+                data-cursor="VIEW"
+                aria-pressed={on}
+              >
+                {option}
+              </button>
+            );
+          })}
+        </div>
+      </fieldset>
 
       <label className={label} htmlFor="piece-copy">
         COPY

@@ -244,11 +244,11 @@ export const Navbar = () => {
                       </Link>
                     ))
                   ) : (
-                    <p className="text-sm leading-7 text-mist">No matching garment or chapter.</p>
+                    <p className="text-sm leading-7 text-mist">No matching piece or chapter.</p>
                   )
                 ) : (
                   <p className="max-w-md text-sm leading-7 text-mist">
-                    Type a garment, look, or chapter.
+                    Type a piece, look, or chapter.
                   </p>
                 )}
               </div>

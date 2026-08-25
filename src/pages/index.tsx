@@ -20,12 +20,12 @@ export default function Home({ looks, pieceCount }: HomeProps) {
         <title>UNBOUND — Collection 001</title>
         <meta
           name="description"
-          content="UNBOUND is premium contemporary streetwear. Collection 001 — not made to follow."
+          content="UNBOUND. Baggy clothes on the rail. Collection 001."
         />
         <meta property="og:title" content="UNBOUND — Collection 001" />
         <meta
           property="og:description"
-          content="A cinematic fashion house for movement, individuality, and dark luxury."
+          content="A shop of baggy clothes. Dark, oversized, waiting."
         />
         <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
