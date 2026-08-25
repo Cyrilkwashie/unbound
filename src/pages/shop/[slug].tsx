@@ -51,7 +51,12 @@ export default function ShopProductPage({ product, related }: ShopProductPagePro
 export const getServerSideProps: GetServerSideProps<ShopProductPageProps> = async (context) => {
   const slug = context.params?.slug;
   const id = Array.isArray(slug) ? slug[0] : slug;
-  const products = readLine().products;
+  let products: CatalogProduct[] = [];
+  try {
+    products = readLine().products;
+  } catch {
+    products = [];
+  }
   const product = id ? getFrom(products, id) : undefined;
 
   if (!product || product.status !== "available") {

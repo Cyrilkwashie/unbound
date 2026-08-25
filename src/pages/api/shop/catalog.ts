@@ -8,10 +8,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).end();
   }
 
-  const products = availableFrom(readLine().products).map((product) => ({
-    id: product.id,
-    name: product.name,
-  }));
-  res.setHeader("Cache-Control", "no-store");
-  return res.status(200).json({ products });
+  try {
+    const products = availableFrom(readLine().products).map((product) => ({
+      id: product.id,
+      name: product.name,
+    }));
+    res.setHeader("Cache-Control", "no-store");
+    return res.status(200).json({ products });
+  } catch {
+    return res.status(200).json({ products: [] });
+  }
 }

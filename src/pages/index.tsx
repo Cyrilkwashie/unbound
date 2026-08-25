@@ -5,7 +5,7 @@ import { Hero } from "@/components/Hero";
 import { HomeContinue } from "@/components/HomeContinue";
 import { HomeLooks } from "@/components/HomeLooks";
 import { HomeStatement } from "@/components/HomeStatement";
-import { availableFrom, featuredFrom, type CatalogProduct } from "@/lib/products";
+import { availableFrom, featuredFrom, SEED_CATALOG, SEED_FEATURED_IDS, type CatalogProduct } from "@/lib/products";
 import { readLine } from "@/lib/house-store";
 
 type HomeProps = {
@@ -42,11 +42,20 @@ export default function Home({ looks, pieceCount }: HomeProps) {
 }
 
 export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
-  const line = readLine();
-  return {
-    props: {
-      looks: featuredFrom(line.products, line.featuredIds),
-      pieceCount: availableFrom(line.products).length,
-    },
-  };
+  try {
+    const line = readLine();
+    return {
+      props: {
+        looks: featuredFrom(line.products, line.featuredIds),
+        pieceCount: availableFrom(line.products).length,
+      },
+    };
+  } catch {
+    return {
+      props: {
+        looks: featuredFrom(SEED_CATALOG, [...SEED_FEATURED_IDS]),
+        pieceCount: availableFrom(SEED_CATALOG).length,
+      },
+    };
+  }
 };

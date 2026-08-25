@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "fs";
-import { join } from "path";
+import { tmpdir } from "os";
+import { dirname, join } from "path";
 import { SEED_BOOKS, type HouseBooks } from "@/lib/atelier-books";
 import { SEED_CATALOG, SEED_FEATURED_IDS, type CatalogProduct } from "@/lib/products";
 
@@ -8,44 +9,54 @@ export type LineFile = {
   featuredIds: string[];
 };
 
-const DATA_DIR = join(process.cwd(), "data");
-const LINE_PATH = join(DATA_DIR, "line.json");
-const BOOKS_PATH = join(DATA_DIR, "books.json");
+const serverless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const COMMITTED_DIR = join(process.cwd(), "data");
 
-const ensureDir = () => {
-  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true });
+const committedLine = join(COMMITTED_DIR, "line.json");
+const committedBooks = join(COMMITTED_DIR, "books.json");
+const runtimeLine = serverless ? join(tmpdir(), "unbound-line.json") : committedLine;
+const runtimeBooks = serverless ? join(tmpdir(), "unbound-books.json") : committedBooks;
+
+const seedLine = (): LineFile => ({
+  products: SEED_CATALOG,
+  featuredIds: [...SEED_FEATURED_IDS],
+});
+
+const readJson = <T,>(path: string): T | null => {
+  try {
+    if (!existsSync(path)) return null;
+    return JSON.parse(readFileSync(path, "utf8")) as T;
+  } catch {
+    return null;
+  }
 };
 
 const writeAtomic = (path: string, value: unknown) => {
-  ensureDir();
-  const temp = `${path}.tmp`;
+  const dir = dirname(path);
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+  const temp = `${path}.${process.pid}.tmp`;
   writeFileSync(temp, `${JSON.stringify(value, null, 2)}\n`, "utf8");
   renameSync(temp, path);
 };
 
-export const readLine = (): LineFile => {
-  ensureDir();
-  if (!existsSync(LINE_PATH)) {
-    const seed: LineFile = { products: SEED_CATALOG, featuredIds: [...SEED_FEATURED_IDS] };
-    writeAtomic(LINE_PATH, seed);
-    return seed;
+const writeSafe = (path: string, fallback: string, value: unknown) => {
+  try {
+    writeAtomic(path, value);
+  } catch {
+    writeAtomic(fallback, value);
   }
-  return JSON.parse(readFileSync(LINE_PATH, "utf8")) as LineFile;
 };
+
+export const readLine = (): LineFile =>
+  readJson<LineFile>(runtimeLine) ?? readJson<LineFile>(committedLine) ?? seedLine();
 
 export const writeLine = (line: LineFile) => {
-  writeAtomic(LINE_PATH, line);
+  writeSafe(runtimeLine, join(tmpdir(), "unbound-line.json"), line);
 };
 
-export const readBooks = (): HouseBooks => {
-  ensureDir();
-  if (!existsSync(BOOKS_PATH)) {
-    writeAtomic(BOOKS_PATH, SEED_BOOKS);
-    return SEED_BOOKS;
-  }
-  return JSON.parse(readFileSync(BOOKS_PATH, "utf8")) as HouseBooks;
-};
+export const readBooks = (): HouseBooks =>
+  readJson<HouseBooks>(runtimeBooks) ?? readJson<HouseBooks>(committedBooks) ?? SEED_BOOKS;
 
 export const writeBooks = (books: HouseBooks) => {
-  writeAtomic(BOOKS_PATH, books);
+  writeSafe(runtimeBooks, join(tmpdir(), "unbound-books.json"), books);
 };

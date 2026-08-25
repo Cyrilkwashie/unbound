@@ -1,7 +1,7 @@
 import type { GetServerSideProps } from "next";
 import { InnerPage } from "@/components/InnerPage";
 import { ShopIndex } from "@/components/ShopIndex";
-import { availableFrom, type CatalogProduct } from "@/lib/products";
+import { availableFrom, SEED_CATALOG, type CatalogProduct } from "@/lib/products";
 import { readLine } from "@/lib/house-store";
 
 type ShopPageProps = {
@@ -20,6 +20,10 @@ export default function ShopPage({ products }: ShopPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ShopPageProps> = async () => ({
-  props: { products: availableFrom(readLine().products) },
-});
+export const getServerSideProps: GetServerSideProps<ShopPageProps> = async () => {
+  try {
+    return { props: { products: availableFrom(readLine().products) } };
+  } catch {
+    return { props: { products: availableFrom(SEED_CATALOG) } };
+  }
+};
