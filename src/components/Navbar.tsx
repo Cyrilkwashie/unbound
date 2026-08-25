@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBag } from "@/context/BagContext";
 import { useLenis } from "@/context/LenisContext";
 import { useFrameSequence } from "@/context/FrameSequenceContext";
+import { availableProducts } from "@/lib/products";
 
 const NAV_LINKS = [
-  { href: "#shop", label: "SHOP" },
-  { href: "#collection", label: "COLLECTION" },
-  { href: "#story", label: "STORY" },
+  { href: "/shop", label: "SHOP" },
+  { href: "/story", label: "STORY" },
+  { href: "/contact", label: "CONTACT" },
 ] as const;
 
 export const Navbar = () => {
+  const router = useRouter();
   const { items, openBag, toggleBag } = useBag();
   const { isReady } = useFrameSequence();
   const lenis = useLenis();
@@ -21,6 +25,7 @@ export const Navbar = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const lastY = useRef(0);
+  const navVisible = isReady || router.pathname !== "/";
 
   useEffect(() => {
     const onScroll = () => {
@@ -40,51 +45,72 @@ export const Navbar = () => {
     };
   }, [menuOpen, searchOpen]);
 
-  const goTo = (href: string) => {
-    setMenuOpen(false);
-    const el = document.querySelector(href);
-    if (el instanceof HTMLElement) {
-      if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.4 });
-      else el.scrollIntoView({ behavior: "smooth" });
-    }
+  useEffect(() => {
+    const close = () => {
+      setMenuOpen(false);
+      setSearchOpen(false);
+    };
+    router.events.on("routeChangeStart", close);
+    return () => router.events.off("routeChangeStart", close);
+  }, [router.events]);
+
+  const goHome = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (router.pathname !== "/") return;
+    event.preventDefault();
+    if (lenis) lenis.scrollTo(0, { duration: 1.4 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  const filteredResults = [
+    ...availableProducts().map((product) => ({
+      href: `/shop/${product.id}`,
+      label: product.name,
+    })),
+    { href: "/story", label: "STORY" },
+    { href: "/contact", label: "CONTACT" },
+  ].filter((item) =>
+    query.trim() ? item.label.toLowerCase().includes(query.trim().toLowerCase()) : false
+  );
 
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-[background,backdrop-filter,border-color] duration-700 ease-cinematic ${
+        className={`fixed inset-x-0 top-0 z-50 transition-[background,backdrop-filter,border-color,opacity] duration-700 ease-cinematic ${
           scrolled
             ? "border-b border-ivory/10 bg-void-0/55 backdrop-blur-md"
             : "border-b border-transparent bg-transparent"
-        } ${isReady ? "opacity-100" : "opacity-0"}`}
+        } ${navVisible ? "opacity-100" : "opacity-0"}`}
       >
         <nav className="grid grid-cols-3 items-center px-5 py-5 md:px-10">
-          <a
-            href="#top"
-            onClick={(event) => {
-              event.preventDefault();
-              if (lenis) lenis.scrollTo(0, { duration: 1.4 });
-              else window.scrollTo({ top: 0, behavior: "smooth" });
-            }}
+          <Link
+            href="/"
+            onClick={goHome}
             className="justify-self-start font-display text-[11px] tracking-[0.42em] text-ivory"
             data-cursor="VIEW"
           >
             UNBOUND
-          </a>
+          </Link>
 
           <ul className="hidden justify-self-center gap-10 md:flex">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <button
-                  type="button"
-                  onClick={() => goTo(link.href)}
-                  className="text-[10px] tracking-[0.28em] text-ivory/80 transition-colors duration-500 hover:text-ivory"
-                  data-cursor="VIEW"
-                >
-                  {link.label}
-                </button>
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const active =
+                link.href === "/shop"
+                  ? router.pathname === "/shop" || router.pathname === "/shop/[slug]"
+                  : router.pathname === link.href;
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className={`text-[10px] tracking-[0.28em] transition-colors duration-500 ${
+                      active ? "text-ivory" : "text-ivory/80 hover:text-ivory"
+                    }`}
+                    data-cursor="VIEW"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           <div className="flex items-center justify-self-end gap-6">
@@ -133,17 +159,20 @@ export const Navbar = () => {
           >
             <div className="flex flex-col gap-7">
               {NAV_LINKS.map((link, index) => (
-                <motion.button
+                <motion.div
                   key={link.href}
-                  type="button"
-                  onClick={() => goTo(link.href)}
-                  className="text-left font-display text-4xl tracking-[0.12em] text-ivory"
                   initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.08 * index, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {link.label}
-                </motion.button>
+                  <Link
+                    href={link.href}
+                    className="font-display text-4xl tracking-[0.12em] text-ivory"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
               <button
                 type="button"
@@ -188,11 +217,29 @@ export const Navbar = () => {
                 className="w-full border-b border-ivory/25 bg-transparent pb-4 font-serif text-3xl italic text-ivory outline-none placeholder:text-ivory/25 md:text-5xl"
                 aria-label="Search"
               />
-              <p className="mt-8 max-w-md text-sm leading-7 text-mist">
-                {query.trim()
-                  ? "Collection 001 currently holds the Darkness Baggy Top and baggy cargos."
-                  : "Type a garment, look, or chapter."}
-              </p>
+              <div className="mt-8 flex flex-col gap-4">
+                {query.trim() ? (
+                  filteredResults.length > 0 ? (
+                    filteredResults.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="text-left text-[12px] tracking-[0.22em] text-ivory"
+                        data-cursor="VIEW"
+                        onClick={() => setSearchOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    ))
+                  ) : (
+                    <p className="text-sm leading-7 text-mist">No matching garment or chapter.</p>
+                  )
+                ) : (
+                  <p className="max-w-md text-sm leading-7 text-mist">
+                    Type a garment, look, or chapter.
+                  </p>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={() => setSearchOpen(false)}

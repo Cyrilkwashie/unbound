@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useLenis } from "@/context/LenisContext";
+import Link from "next/link";
 
 export const Footer = () => {
-  const lenis = useLenis();
   const [email, setEmail] = useState("");
   const [joined, setJoined] = useState(false);
 
@@ -51,36 +50,15 @@ export const Footer = () => {
 
       <div className="mt-20 flex flex-col gap-6 border-t border-ivory/10 pt-8 text-[10px] tracking-[0.22em] text-mist md:flex-row md:items-center md:justify-between">
         <div className="flex gap-8">
-          <button
-            type="button"
-            onClick={() => {
-              const el = document.getElementById("collection");
-              if (el && lenis) lenis.scrollTo(el);
-              else el?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
-            COLLECTION
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const el = document.getElementById("shop");
-              if (el && lenis) lenis.scrollTo(el);
-              else el?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
+          <Link href="/shop" className="transition-colors duration-500 hover:text-ivory">
             SHOP
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const el = document.getElementById("story");
-              if (el && lenis) lenis.scrollTo(el);
-              else el?.scrollIntoView({ behavior: "smooth" });
-            }}
-          >
+          </Link>
+          <Link href="/story" className="transition-colors duration-500 hover:text-ivory">
             STORY
-          </button>
+          </Link>
+          <Link href="/contact" className="transition-colors duration-500 hover:text-ivory">
+            CONTACT
+          </Link>
         </div>
         <p>© 2026 UNBOUND — ALL RIGHTS RESERVED</p>
       </div>

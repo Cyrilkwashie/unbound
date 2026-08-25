@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { ProductPhoto } from "@/components/ProductPhoto";
 import { PRODUCT_IMAGES } from "@/lib/products";
 
@@ -21,12 +22,22 @@ export const CollectionSection = () => {
             CUT FOR MOTION
           </h2>
         </motion.div>
-        <motion.p
-          className="hidden max-w-xs text-right text-sm leading-7 text-mist md:block"
+        <motion.div
+          className="hidden max-w-xs text-right md:block"
           {...fade}
         >
-          Two opening garments. Oversized proportion, heavyweight construction, designed to move.
-        </motion.p>
+          <p className="text-sm leading-7 text-mist">
+            Two opening garments. Oversized proportion, heavyweight construction, designed to move.
+          </p>
+          <Link
+            href="/shop"
+            className="mt-5 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory/70 transition-colors duration-500 hover:text-ivory"
+            data-cursor="VIEW"
+          >
+            VIEW ALL
+            <span className="block h-px w-8 bg-ivory/50" />
+          </Link>
+        </motion.div>
       </div>
 
       <article className="grid items-end gap-8 lg:grid-cols-12 lg:gap-12">

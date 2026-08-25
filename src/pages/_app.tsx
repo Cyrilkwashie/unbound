@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import { Cormorant_Garamond, Inter_Tight, Unbounded } from "next/font/google";
 import { BagProvider } from "@/context/BagContext";
 import { FrameSequenceProvider } from "@/context/FrameSequenceContext";
@@ -34,6 +35,9 @@ const interTight = Inter_Tight({
 });
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  const isHome = router.pathname === "/";
+
   return (
     <div
       className={`${unbounded.variable} ${cormorant.variable} ${interTight.variable} font-sans antialiased`}
@@ -42,12 +46,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <BagProvider>
           <SmoothScrollProvider>
             <a
-              href="#collection"
+              href={isHome ? "#collection" : "/shop"}
               className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-ivory focus:px-4 focus:py-2 focus:text-void-0"
             >
               Skip to collection
             </a>
-            <LoadingScreen />
+            {isHome ? <LoadingScreen /> : null}
             <GrainOverlay />
             <CustomCursor />
             <Navbar />

@@ -9,6 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useRouter } from "next/router";
 import { FrameController } from "@/lib/FrameController";
 
 type FrameSequenceContextValue = {
@@ -29,10 +30,12 @@ const MIN_LOADER_MS = 1100;
 const LOADER_TIMEOUT_MS = 9000;
 
 export const FrameSequenceProvider = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
+  const isHome = router.pathname === "/";
   const controllerRef = useRef<FrameController | null>(null);
   const [controller, setController] = useState<FrameController | null>(null);
-  const [loadProgress, setLoadProgress] = useState(0);
-  const [isReady, setIsReady] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(isHome ? 0 : 1);
+  const [isReady, setIsReady] = useState(!isHome);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
@@ -44,6 +47,19 @@ export const FrameSequenceProvider = ({ children }: { children: ReactNode }) => 
   }, []);
 
   useEffect(() => {
+    if (!isHome) {
+      setIsReady(true);
+      setLoadProgress(1);
+      return;
+    }
+
+    if (controllerRef.current) {
+      setController(controllerRef.current);
+      setIsReady(true);
+      setLoadProgress(1);
+      return;
+    }
+
     const instance = new FrameController();
     controllerRef.current = instance;
     setController(instance);
@@ -59,30 +75,34 @@ export const FrameSequenceProvider = ({ children }: { children: ReactNode }) => 
       window.setTimeout(() => {
         setIsReady(true);
         setLoadProgress(1);
-        if (!mediaReduced()) {
+        if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
           instance.startBackgroundFill();
         }
       }, wait);
     };
 
-    const mediaReduced = () =>
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
     const timeout = window.setTimeout(finish, LOADER_TIMEOUT_MS);
 
-    if (mediaReduced()) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       instance.showStaticFrame();
       setLoadProgress(1);
       finish();
     } else {
-      void instance.preloadEssential((loaded, total) => {
-        setLoadProgress(total === 0 ? 1 : loaded / total);
-      }).then(finish);
+      void instance
+        .preloadEssential((loaded, total) => {
+          setLoadProgress(total === 0 ? 1 : loaded / total);
+        })
+        .then(finish);
     }
 
     return () => {
       window.clearTimeout(timeout);
-      instance.destroy();
+    };
+  }, [isHome]);
+
+  useEffect(() => {
+    return () => {
+      controllerRef.current?.destroy();
       controllerRef.current = null;
     };
   }, []);
