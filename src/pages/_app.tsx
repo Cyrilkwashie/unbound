@@ -46,10 +46,10 @@ export default function App({ Component, pageProps }: AppProps) {
         <BagProvider>
           <SmoothScrollProvider>
             <a
-              href={isHome ? "#collection" : "/shop"}
+              href={isHome ? "#house" : "/shop"}
               className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:bg-ivory focus:px-4 focus:py-2 focus:text-void-0"
             >
-              Skip to collection
+              Skip to the house
             </a>
             {isHome ? <LoadingScreen /> : null}
             <GrainOverlay />

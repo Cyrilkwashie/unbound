@@ -1,10 +1,9 @@
 import Head from "next/head";
-import { CollectionSection } from "@/components/CollectionSection";
-import { EditorialSection } from "@/components/EditorialSection";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
-import { PhilosophySection } from "@/components/PhilosophySection";
-import { ProductShowcase } from "@/components/ProductShowcase";
+import { HomeContinue } from "@/components/HomeContinue";
+import { HomeLooks } from "@/components/HomeLooks";
+import { HomeStatement } from "@/components/HomeStatement";
 
 export default function Home() {
   return (
@@ -25,10 +24,9 @@ export default function Home() {
       </Head>
       <main>
         <Hero />
-        <CollectionSection />
-        <ProductShowcase />
-        <EditorialSection />
-        <PhilosophySection />
+        <HomeStatement />
+        <HomeLooks />
+        <HomeContinue />
       </main>
       <Footer />
     </>

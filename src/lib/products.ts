@@ -214,6 +214,14 @@ export const availableProducts = () =>
 export const getProduct = (id: string) =>
   CATALOG.find((product) => product.id === id);
 
+/** Opening looks featured on the homepage — not the full shop. */
+export const FEATURED_LOOK_IDS = ["darkness-baggy-top", "baggy-cargo"] as const;
+
+export const featuredLooks = () =>
+  FEATURED_LOOK_IDS.map((id) => getProduct(id)).filter(
+    (product): product is CatalogProduct => Boolean(product)
+  );
+
 export const productsInCategory = (category: ShopCategory) => {
   const pieces = availableProducts();
   if (category === "all") return pieces;

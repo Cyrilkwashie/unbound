@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 import {
   SHOP_CATEGORIES,
   productsInCategory,
@@ -9,14 +10,30 @@ import {
 import { ShopTile } from "@/components/ShopTile";
 import { useLenis } from "@/context/LenisContext";
 
+const isShopCategory = (value: string): value is ShopCategory =>
+  SHOP_CATEGORIES.some((item) => item.id === value);
+
 export const ShopIndex = () => {
+  const router = useRouter();
   const lenis = useLenis();
   const [category, setCategory] = useState<ShopCategory>("all");
   const pieces = useMemo(() => productsInCategory(category), [category]);
 
+  useEffect(() => {
+    if (!router.isReady) return;
+    const raw = router.query.category;
+    const value = Array.isArray(raw) ? raw[0] : raw;
+    if (value && isShopCategory(value)) setCategory(value);
+  }, [router.isReady, router.query.category]);
+
   const selectCategory = (next: ShopCategory) => {
     if (next === category) return;
     setCategory(next);
+    void router.replace(
+      next === "all" ? "/shop" : { pathname: "/shop", query: { category: next } },
+      undefined,
+      { shallow: true, scroll: false }
+    );
     if (lenis) lenis.scrollTo(0, { duration: 12 / 10 });
     else window.scrollTo({ top: 0, behavior: "smooth" });
   };
