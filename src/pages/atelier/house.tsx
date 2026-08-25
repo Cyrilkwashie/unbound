@@ -14,8 +14,8 @@ export default function AtelierHousePage({ door }: HousePageProps) {
     { label: "COLLECTION", value: "001" },
     { label: "PUBLIC EMAIL", value: "hello@unbound.studio" },
     { label: "THE DOOR", value: "/atelier" },
-    { label: "THE NAME", value: door || "—" },
-    { label: "THE KEY", value: "Held in the house env. Not shown here." },
+    { label: "THE NAME", value: door || "OPEN" },
+    { label: "THE KEY", value: "The door is open for now. Any name and key may enter." },
   ];
 
   return (
