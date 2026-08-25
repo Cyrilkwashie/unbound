@@ -7,10 +7,19 @@ import {
   type ShopCategory,
 } from "@/lib/products";
 import { ShopTile } from "@/components/ShopTile";
+import { useLenis } from "@/context/LenisContext";
 
 export const ShopIndex = () => {
+  const lenis = useLenis();
   const [category, setCategory] = useState<ShopCategory>("all");
   const pieces = useMemo(() => productsInCategory(category), [category]);
+
+  const selectCategory = (next: ShopCategory) => {
+    if (next === category) return;
+    setCategory(next);
+    if (lenis) lenis.scrollTo(0, { duration: 12 / 10 });
+    else window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div>
@@ -23,7 +32,7 @@ export const ShopIndex = () => {
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setCategory(item.id)}
+                  onClick={() => selectCategory(item.id)}
                   className={`text-[10px] tracking-[0.28em] transition-colors duration-500 ${
                     active ? "text-ivory" : "text-mist hover:text-ivory"
                   }`}
