@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
   SHOP_CATEGORIES,
-  productsInCategory,
+  productsInCategoryFrom,
+  type CatalogProduct,
   type ShopCategory,
 } from "@/lib/products";
 import { ShopTile } from "@/components/ShopTile";
@@ -13,11 +14,18 @@ import { useLenis } from "@/context/LenisContext";
 const isShopCategory = (value: string): value is ShopCategory =>
   SHOP_CATEGORIES.some((item) => item.id === value);
 
-export const ShopIndex = () => {
+type ShopIndexProps = {
+  products: CatalogProduct[];
+};
+
+export const ShopIndex = ({ products }: ShopIndexProps) => {
   const router = useRouter();
   const lenis = useLenis();
   const [category, setCategory] = useState<ShopCategory>("all");
-  const pieces = useMemo(() => productsInCategory(category), [category]);
+  const pieces = useMemo(
+    () => productsInCategoryFrom(products, category),
+    [products, category]
+  );
 
   useEffect(() => {
     if (!router.isReady) return;

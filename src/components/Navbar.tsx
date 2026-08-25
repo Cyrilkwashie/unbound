@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useBag } from "@/context/BagContext";
 import { useLenis } from "@/context/LenisContext";
 import { useFrameSequence } from "@/context/FrameSequenceContext";
-import { availableProducts } from "@/lib/products";
 
 const NAV_LINKS = [
   { href: "/shop", label: "SHOP" },
@@ -24,6 +23,7 @@ export const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [catalog, setCatalog] = useState<{ href: string; label: string }[]>([]);
   const lastY = useRef(0);
   const navVisible = isReady || router.pathname !== "/";
 
@@ -54,6 +54,21 @@ export const Navbar = () => {
     return () => router.events.off("routeChangeStart", close);
   }, [router.events]);
 
+  useEffect(() => {
+    if (!searchOpen) return;
+    void fetch("/api/shop/catalog")
+      .then((response) => response.json())
+      .then((payload: { products?: { id: string; name: string }[] }) => {
+        setCatalog(
+          (payload.products ?? []).map((product) => ({
+            href: `/shop/${product.id}`,
+            label: product.name,
+          }))
+        );
+      })
+      .catch(() => setCatalog([]));
+  }, [searchOpen]);
+
   const goHome = (event: MouseEvent<HTMLAnchorElement>) => {
     if (router.pathname !== "/") return;
     event.preventDefault();
@@ -62,10 +77,7 @@ export const Navbar = () => {
   };
 
   const filteredResults = [
-    ...availableProducts().map((product) => ({
-      href: `/shop/${product.id}`,
-      label: product.name,
-    })),
+    ...catalog,
     { href: "/story", label: "STORY" },
     { href: "/contact", label: "CONTACT" },
   ].filter((item) =>

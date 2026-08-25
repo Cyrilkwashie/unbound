@@ -1,15 +1,11 @@
-import type { GetStaticPaths, GetStaticProps } from "next";
+import type { GetServerSideProps } from "next";
 import Link from "next/link";
 import Head from "next/head";
 import { Footer } from "@/components/Footer";
 import { ProductCard } from "@/components/ProductCard";
 import { ShopTile } from "@/components/ShopTile";
-import {
-  CATALOG,
-  availableProducts,
-  getProduct,
-  type CatalogProduct,
-} from "@/lib/products";
+import { availableFrom, getFrom, type CatalogProduct } from "@/lib/products";
+import { readLine } from "@/lib/house-store";
 
 type ShopProductPageProps = {
   product: CatalogProduct;
@@ -52,23 +48,19 @@ export default function ShopProductPage({ product, related }: ShopProductPagePro
   );
 }
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: availableProducts().map((product) => ({ params: { slug: product.id } })),
-  fallback: false,
-});
-
-export const getStaticProps: GetStaticProps<ShopProductPageProps> = async (context) => {
+export const getServerSideProps: GetServerSideProps<ShopProductPageProps> = async (context) => {
   const slug = context.params?.slug;
   const id = Array.isArray(slug) ? slug[0] : slug;
-  const product = id ? getProduct(id) : undefined;
+  const products = readLine().products;
+  const product = id ? getFrom(products, id) : undefined;
 
   if (!product || product.status !== "available") {
     return { notFound: true };
   }
 
-  const related = CATALOG.filter(
-    (item) => item.id !== product.id && item.status === "available"
-  ).slice(0, 4);
+  const related = availableFrom(products)
+    .filter((item) => item.id !== product.id)
+    .slice(0, 4);
 
   return { props: { product, related } };
 };

@@ -1,11 +1,19 @@
 import Head from "next/head";
+import type { GetServerSideProps } from "next";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { HomeContinue } from "@/components/HomeContinue";
 import { HomeLooks } from "@/components/HomeLooks";
 import { HomeStatement } from "@/components/HomeStatement";
+import { availableFrom, featuredFrom, type CatalogProduct } from "@/lib/products";
+import { readLine } from "@/lib/house-store";
 
-export default function Home() {
+type HomeProps = {
+  looks: CatalogProduct[];
+  pieceCount: number;
+};
+
+export default function Home({ looks, pieceCount }: HomeProps) {
   return (
     <>
       <Head>
@@ -25,10 +33,20 @@ export default function Home() {
       <main>
         <Hero />
         <HomeStatement />
-        <HomeLooks />
+        <HomeLooks looks={looks} pieceCount={pieceCount} />
         <HomeContinue />
       </main>
       <Footer />
     </>
   );
 }
+
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  const line = readLine();
+  return {
+    props: {
+      looks: featuredFrom(line.products, line.featuredIds),
+      pieceCount: availableFrom(line.products).length,
+    },
+  };
+};

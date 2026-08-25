@@ -5,8 +5,7 @@ import Link from "next/link";
 import { ProductPhoto } from "@/components/ProductPhoto";
 import {
   SHOP_CATEGORIES,
-  availableProducts,
-  featuredLooks,
+  type CatalogProduct,
 } from "@/lib/products";
 
 const fade = {
@@ -16,12 +15,17 @@ const fade = {
   transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] },
 };
 
-export const HomeLooks = () => {
-  const [top, cargo] = featuredLooks();
-  const pieceCount = availableProducts().length;
+export const HomeLooks = ({
+  looks,
+  pieceCount,
+}: {
+  looks: CatalogProduct[];
+  pieceCount: number;
+}) => {
+  const [top, cargo] = looks;
   const departments = SHOP_CATEGORIES.filter((item) => item.id !== "all");
 
-  if (!top || !cargo) return null;
+  if (!top) return null;
 
   return (
     <section className="relative bg-void-1 px-5 pb-28 pt-4 md:px-10 md:pb-36">
@@ -74,6 +78,7 @@ export const HomeLooks = () => {
         </motion.div>
       </article>
 
+      {cargo ? (
       <motion.article className="relative mt-24 overflow-hidden lg:mt-36" {...fade}>
         <Link
           href={`/shop/${cargo.id}`}
@@ -97,6 +102,7 @@ export const HomeLooks = () => {
           </div>
         </Link>
       </motion.article>
+      ) : null}
 
       <motion.div
         className="mt-20 flex flex-col gap-8 border-t border-ivory/10 pt-10 md:mt-28 md:flex-row md:items-center md:justify-between"

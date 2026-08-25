@@ -1,10 +1,6 @@
 /**
- * UNBOUND shop catalog.
- *
- * To add a garment:
- * 1. Drop the photo in /public (or /public/shop)
- * 2. Append an object to CATALOG
- * 3. Rebuild
+ * UNBOUND shop types and helpers.
+ * The live line lives in data/line.json and is written from the atelier.
  */
 
 export const PRODUCT_IMAGES = {
@@ -22,13 +18,14 @@ export const SHOP_CATEGORIES = [
 ] as const;
 
 export type ShopCategory = (typeof SHOP_CATEGORIES)[number]["id"];
+export type ProductCategory = Exclude<ShopCategory, "all">;
 
 export type CatalogProduct = {
   id: string;
   look: string;
   name: string;
   kicker: string;
-  category: Exclude<ShopCategory, "all">;
+  category: ProductCategory;
   price: number;
   color: string;
   colors: { label: string; hex: string }[];
@@ -39,13 +36,64 @@ export type CatalogProduct = {
   status: "available" | "forthcoming";
 };
 
+const SWATCH_HEX: Record<string, string> = {
+  BLACK: "#111111",
+  WHITE: "#F4F1EA",
+  IVORY: "#F4F1EA",
+};
+
+export const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "") || `piece-${Date.now()}`;
+
+export const nextLook = (products: CatalogProduct[]) => {
+  const highest = Math.max(0, ...products.map((item) => Number.parseInt(item.look, 10) || 0));
+  return String(highest + 1).padStart(2, "0");
+};
+
+export const swatchesFromColor = (color: string) => {
+  const parts = color
+    .split("/")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  if (parts.length === 0) return [{ label: "Black", hex: "#111111" }];
+  return parts.map((label) => ({
+    label,
+    hex: SWATCH_HEX[label.toUpperCase()] ?? "#111111",
+  }));
+};
+
+export const availableFrom = (products: CatalogProduct[]) =>
+  products.filter((product) => product.status === "available");
+
+export const getFrom = (products: CatalogProduct[], id: string) =>
+  products.find((product) => product.id === id);
+
+export const productsInCategoryFrom = (products: CatalogProduct[], category: ShopCategory) => {
+  const pieces = availableFrom(products);
+  if (category === "all") return pieces;
+  return pieces.filter((product) => product.category === category);
+};
+
+export const featuredFrom = (products: CatalogProduct[], featuredIds: string[]) => {
+  const picked = featuredIds
+    .map((id) => getFrom(products, id))
+    .filter((product): product is CatalogProduct =>
+      Boolean(product) && product?.status === "available"
+    );
+  if (picked.length >= 1) return picked.slice(0, 2);
+  return availableFrom(products).slice(0, 2);
+};
+
 const SWATCH_BLACK = [{ label: "Black", hex: "#111111" }];
 const SWATCH_LAYERED = [
   { label: "Black", hex: "#111111" },
   { label: "White", hex: "#F4F1EA" },
 ];
 
-export const CATALOG: CatalogProduct[] = [
+export const SEED_CATALOG: CatalogProduct[] = [
   {
     id: "darkness-baggy-top",
     look: "01",
@@ -208,22 +256,4 @@ export const CATALOG: CatalogProduct[] = [
   },
 ];
 
-export const availableProducts = () =>
-  CATALOG.filter((product) => product.status === "available");
-
-export const getProduct = (id: string) =>
-  CATALOG.find((product) => product.id === id);
-
-/** Opening looks featured on the homepage — not the full shop. */
-export const FEATURED_LOOK_IDS = ["darkness-baggy-top", "baggy-cargo"] as const;
-
-export const featuredLooks = () =>
-  FEATURED_LOOK_IDS.map((id) => getProduct(id)).filter(
-    (product): product is CatalogProduct => Boolean(product)
-  );
-
-export const productsInCategory = (category: ShopCategory) => {
-  const pieces = availableProducts();
-  if (category === "all") return pieces;
-  return pieces.filter((product) => product.category === category);
-};
+export const SEED_FEATURED_IDS = ["darkness-baggy-top", "baggy-cargo"];
