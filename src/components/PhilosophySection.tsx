@@ -35,7 +35,7 @@ export const PhilosophySection = () => {
           viewport={{ once: true }}
           transition={{ duration: 1.1, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
         >
-          UNBOUND is a shop of baggy clothes. Oversized tops, cargos, outer — dark,
+          UNBOUND is a shop of baggy clothes. Oversized tops, cargos, outer —
           heavyweight, waiting on the rail. The line is here. Take it.
         </motion.p>
       </div>

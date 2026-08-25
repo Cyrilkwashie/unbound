@@ -38,7 +38,7 @@ export const EditorialSection = () => {
           Beyond the expected.
         </h2>
         <p className="mt-10 max-w-md text-sm leading-7 text-ivory/75">
-          Baggy. Dark. Yours from the rail.
+          Baggy. Yours from the rail.
         </p>
       </motion.div>
     </section>

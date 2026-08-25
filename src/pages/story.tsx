@@ -9,7 +9,7 @@ export default function StoryPage() {
     <InnerPage
       title="STORY"
       kicker="THE HOUSE — EST. 2026"
-      description="UNBOUND. A shop of baggy clothes — dark, oversized, on the rail."
+      description="UNBOUND. A shop of baggy clothes — oversized, on the rail."
     >
       <section className="px-5 pb-20 md:px-10 md:pb-28">
         <motion.p
@@ -18,7 +18,7 @@ export default function StoryPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          A shop of baggy clothes. Dark. Oversized. Waiting.
+          A shop of baggy clothes. Oversized. Waiting.
         </motion.p>
         <motion.p
           className="mt-10 max-w-xl text-sm leading-8 text-mist"

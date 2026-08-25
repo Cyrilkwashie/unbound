@@ -42,7 +42,7 @@ export const HomeContinue = () => {
           </h2>
           <p className="mt-8 max-w-sm text-sm leading-8 text-mist">
             A shop for baggy clothes. Collection 001 waits on the rail —
-            oversized, heavyweight, dark. Come take it.
+            oversized, heavyweight. Come take it.
           </p>
           <Link
             href="/story"

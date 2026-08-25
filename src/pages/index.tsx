@@ -25,7 +25,7 @@ export default function Home({ looks, pieceCount }: HomeProps) {
         <meta property="og:title" content="UNBOUND — Collection 001" />
         <meta
           property="og:description"
-          content="A shop of baggy clothes. Dark, oversized, waiting."
+          content="A shop of baggy clothes. Oversized, waiting."
         />
         <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
