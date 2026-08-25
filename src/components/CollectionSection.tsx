@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CampaignStill } from "@/components/CampaignStill";
-import { FEATURED_FRAMES } from "@/lib/frames";
+import { ProductPhoto } from "@/components/ProductPhoto";
+import { PRODUCT_IMAGES } from "@/lib/products";
 
 const fade = {
   initial: { opacity: 0, y: 28 },
@@ -10,33 +10,6 @@ const fade = {
   viewport: { once: true, margin: "-12%" },
   transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] },
 };
-
-const pieces = [
-  {
-    id: "01",
-    title: "BAGGY TEES",
-    copy: "Oversized proportions, heavyweight construction, designed for movement.",
-    price: "FROM $145",
-    frame: FEATURED_FRAMES.baggyTees,
-    imageClass: "aspect-[4/5] lg:aspect-[5/6]",
-  },
-  {
-    id: "02",
-    title: "HOODIES",
-    copy: "Sculpted volume. Brushed interior. A silhouette that holds its own in motion.",
-    price: "FROM $220",
-    frame: FEATURED_FRAMES.hoodies,
-    imageClass: "aspect-[3/4]",
-  },
-  {
-    id: "03",
-    title: "CARGO PANTS",
-    copy: "Architectural pockets. Relaxed fall. Cut to travel with the body, not against it.",
-    price: "FROM $195",
-    frame: FEATURED_FRAMES.cargo,
-    imageClass: "aspect-[16/9] md:aspect-[21/9]",
-  },
-] as const;
 
 export const CollectionSection = () => {
   return (
@@ -52,7 +25,7 @@ export const CollectionSection = () => {
           className="hidden max-w-xs text-right text-sm leading-7 text-mist md:block"
           {...fade}
         >
-          Three chapters. One attitude. Collection 001 is built around proportion, weight, and the refusal to sit still.
+          Two opening garments. Oversized proportion, heavyweight construction, designed to move.
         </motion.p>
       </div>
 
@@ -61,30 +34,32 @@ export const CollectionSection = () => {
           href="#shop"
           data-cursor="EXPLORE"
           data-cursor-grow="true"
-          className="group relative block overflow-hidden bg-void-3 lg:col-span-8"
+          className="group relative block overflow-hidden bg-[#cfc9c0] lg:col-span-8"
           {...fade}
         >
-          <CampaignStill
-            frame={pieces[0].frame}
-            alt="Baggy tees campaign still"
-            className={`w-full object-cover object-center transition-transform duration-700 ease-cinematic group-hover:scale-[1.03] ${pieces[0].imageClass}`}
+          <ProductPhoto
+            src={PRODUCT_IMAGES.baggyTop}
+            alt="UNBOUND Darkness baggy layered top"
+            className="aspect-[4/5] w-full object-contain object-center p-6 transition-transform duration-700 ease-cinematic group-hover:scale-[1.03] lg:aspect-[5/6] lg:p-10"
           />
-          <span className="absolute left-5 top-5 text-[10px] tracking-[0.28em] text-ivory/80">
-            {pieces[0].id} / {pieces[0].title}
+          <span className="absolute left-5 top-5 text-[10px] tracking-[0.28em] text-void-0/70">
+            01 / BAGGY TOP
           </span>
         </motion.a>
         <motion.div className="lg:col-span-4 lg:pb-6" {...fade}>
           <h3 className="font-display text-3xl tracking-[0.14em] text-ivory md:text-4xl">
-            {pieces[0].title}
+            BAGGY TOP
           </h3>
-          <p className="mt-6 max-w-sm text-sm leading-7 text-mist">{pieces[0].copy}</p>
-          <p className="mt-8 text-[11px] tracking-[0.24em] text-ivory">{pieces[0].price}</p>
+          <p className="mt-6 max-w-sm text-sm leading-7 text-mist">
+            Oversized layered tee. Black over white. Thorn graphic, built for movement.
+          </p>
+          <p className="mt-8 text-[11px] tracking-[0.24em] text-ivory">$165</p>
           <a
             href="#shop"
             className="mt-8 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory"
             data-cursor="SHOP"
           >
-            SHOP CHAPTER
+            SHOP GARMENT
             <span className="block h-px w-8 bg-ivory/70" />
           </a>
         </motion.div>
@@ -92,54 +67,43 @@ export const CollectionSection = () => {
 
       <article className="mt-24 grid items-center gap-8 lg:mt-36 lg:grid-cols-12">
         <motion.div className="lg:col-span-5 lg:col-start-2 lg:pr-8" {...fade}>
-          <p className="mb-5 text-[10px] tracking-[0.28em] text-mist">{pieces[1].id} / HOOD</p>
+          <p className="mb-5 text-[10px] tracking-[0.28em] text-mist">02 / HOOD</p>
           <h3 className="font-display text-3xl tracking-[0.14em] text-ivory md:text-4xl">
-            {pieces[1].title}
+            HOODIES
           </h3>
-          <p className="mt-6 max-w-sm text-sm leading-7 text-mist">{pieces[1].copy}</p>
-          <p className="mt-8 text-[11px] tracking-[0.24em] text-ivory">{pieces[1].price}</p>
-          <a
-            href="#shop"
-            className="mt-8 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory"
-            data-cursor="SHOP"
-          >
-            SHOP CHAPTER
-            <span className="block h-px w-8 bg-ivory/70" />
-          </a>
+          <p className="mt-6 max-w-sm text-sm leading-7 text-mist">
+            Sculpted volume. Brushed interior. A silhouette that holds its own in motion.
+          </p>
+          <p className="mt-8 text-[11px] tracking-[0.24em] text-mist">LOOK 02 — FORTHCOMING</p>
         </motion.div>
-        <motion.a
-          href="#shop"
-          data-cursor="EXPLORE"
-          data-cursor-grow="true"
-          className="group relative block overflow-hidden bg-void-3 lg:col-span-6"
+        <motion.div
+          className="flex min-h-[280px] items-end border border-ivory/10 bg-void-3 p-8 lg:col-span-6 lg:min-h-[420px]"
           {...fade}
         >
-          <CampaignStill
-            frame={pieces[1].frame}
-            alt="Hoodies campaign still"
-            className={`w-full object-cover object-center transition-transform duration-700 ease-cinematic group-hover:scale-[1.03] ${pieces[1].imageClass}`}
-          />
-        </motion.a>
+          <p className="font-serif text-2xl italic text-ivory/40 md:text-4xl">Soon.</p>
+        </motion.div>
       </article>
 
       <motion.article
-        className="relative mt-24 overflow-hidden bg-void-3 lg:mt-40"
+        className="relative mt-24 overflow-hidden bg-[#eceae4] lg:mt-40"
         {...fade}
       >
         <a href="#shop" data-cursor="EXPLORE" data-cursor-grow="true" className="group block">
-          <CampaignStill
-            frame={pieces[2].frame}
-            alt="Cargo pants campaign still"
-            className={`w-full object-cover object-center transition-transform duration-[900ms] ease-cinematic group-hover:scale-[1.02] ${pieces[2].imageClass}`}
+          <ProductPhoto
+            src={PRODUCT_IMAGES.cargo}
+            alt="UNBOUND baggy cargo pants"
+            className="aspect-[4/5] w-full object-cover object-center transition-transform duration-[900ms] ease-cinematic group-hover:scale-[1.02] md:aspect-[16/9]"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-void-0/80 via-void-0/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-void-0/85 via-void-0/10 to-transparent" />
           <div className="absolute bottom-8 left-6 right-6 md:bottom-12 md:left-12">
-            <p className="text-[10px] tracking-[0.28em] text-mist">{pieces[2].id} / TROUSER</p>
+            <p className="text-[10px] tracking-[0.28em] text-mist">03 / TROUSER</p>
             <h3 className="mt-3 font-display text-[clamp(1.8rem,5vw,4rem)] tracking-[0.14em] text-ivory">
-              {pieces[2].title}
+              CARGO PANTS
             </h3>
-            <p className="mt-4 max-w-md text-sm leading-7 text-ivory/75">{pieces[2].copy}</p>
-            <p className="mt-6 text-[11px] tracking-[0.24em] text-ivory">{pieces[2].price}</p>
+            <p className="mt-4 max-w-md text-sm leading-7 text-ivory/75">
+              Architectural pockets. Relaxed fall. Cut to travel with the body, not against it.
+            </p>
+            <p className="mt-6 text-[11px] tracking-[0.24em] text-ivory">$195</p>
           </div>
         </a>
       </motion.article>

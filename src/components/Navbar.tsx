@@ -184,13 +184,13 @@ export const Navbar = () => {
                 autoFocus
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Look 01, Void Graphic Tee, Collection"
+                placeholder="Baggy top, cargo, Collection"
                 className="w-full border-b border-ivory/25 bg-transparent pb-4 font-serif text-3xl italic text-ivory outline-none placeholder:text-ivory/25 md:text-5xl"
                 aria-label="Search"
               />
               <p className="mt-8 max-w-md text-sm leading-7 text-mist">
                 {query.trim()
-                  ? "Collection 001 currently holds a single released garment — the Void Graphic Tee."
+                  ? "Collection 001 currently holds the Darkness Baggy Top and baggy cargos."
                   : "Type a garment, look, or chapter."}
               </p>
               <button

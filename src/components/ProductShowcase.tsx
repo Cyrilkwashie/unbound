@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useBag } from "@/context/BagContext";
-import { CampaignStill } from "@/components/CampaignStill";
-import { FEATURED_FRAMES } from "@/lib/frames";
+import { ProductPhoto } from "@/components/ProductPhoto";
+import { PRODUCT_IMAGES } from "@/lib/products";
 
 const SIZES = ["XS", "S", "M", "L", "XL"] as const;
 
@@ -15,11 +15,11 @@ export const ProductShowcase = () => {
 
   const add = () => {
     addItem({
-      id: "void-graphic-tee",
-      name: "VOID GRAPHIC TEE",
+      id: "darkness-baggy-top",
+      name: "DARKNESS BAGGY TOP",
       price: 165,
       size,
-      color: "BLACK",
+      color: "BLACK / WHITE",
     });
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1600);
@@ -43,10 +43,10 @@ export const ProductShowcase = () => {
           viewport={{ once: true, margin: "-10%" }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          <CampaignStill
-            frame={FEATURED_FRAMES.product}
-            alt="Void Graphic Tee on the UNBOUND campaign model"
-            className="aspect-[4/5] w-full object-cover object-center md:aspect-[5/6]"
+          <ProductPhoto
+            src={PRODUCT_IMAGES.baggyTop}
+            alt="UNBOUND Darkness baggy layered top"
+            className="aspect-[4/5] w-full bg-[#cfc9c0] object-contain object-center p-8 md:aspect-[5/6] md:p-12"
           />
         </motion.div>
 
@@ -57,20 +57,23 @@ export const ProductShowcase = () => {
           viewport={{ once: true, margin: "-10%" }}
           transition={{ duration: 1.1, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
         >
-          <p className="text-[10px] tracking-[0.32em] text-mist">GARMENT 01 / LOOK 01</p>
+          <p className="text-[10px] tracking-[0.32em] text-mist">GARMENT 01 / BAGGY TOP</p>
           <h3 className="mt-5 font-display text-[clamp(1.8rem,4vw,3.2rem)] tracking-[0.1em] text-ivory">
-            VOID GRAPHIC TEE
+            DARKNESS BAGGY TOP
           </h3>
           <p className="mt-6 max-w-md text-sm leading-7 text-mist">
-            The black graphic shirt from the campaign film. Heavyweight cotton, oversized drape,
-            printed to sit in the dark rather than shout from it.
+            Oversized layered tee — black over white. Thorn graphic across the chest, sleeve marks
+            down the arms. Cut to drape, not to fit in.
           </p>
 
           <p className="mt-10 font-serif text-3xl italic text-ivory">$165</p>
 
           <div className="mt-10">
-            <p className="text-[10px] tracking-[0.28em] text-mist">COLOR — BLACK</p>
-            <div className="mt-3 h-5 w-5 border border-ivory/40 bg-[#111]" title="Black" />
+            <p className="text-[10px] tracking-[0.28em] text-mist">COLOR — BLACK / WHITE</p>
+            <div className="mt-3 flex gap-2">
+              <div className="h-5 w-5 border border-ivory/40 bg-[#111]" title="Black" />
+              <div className="h-5 w-5 border border-ivory/40 bg-ivory" title="White" />
+            </div>
           </div>
 
           <fieldset className="mt-10">
