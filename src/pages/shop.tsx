@@ -20,7 +20,8 @@ export default function ShopPage({ products }: ShopPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ShopPageProps> = async () => {
+export const getServerSideProps: GetServerSideProps<ShopPageProps> = async ({ res }) => {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
   try {
     return { props: { products: availableFrom(readLine().products) } };
   } catch {

@@ -61,7 +61,7 @@ export const productFromPayload = (
   const sizes = (body.sizes ?? []).filter(isGarmentSize);
   const kicker =
     body.kicker?.trim().toUpperCase() || `GARMENT ${look} / ${category.toUpperCase()}`;
-  const image = body.image?.trim() || "/baggy top.jpg";
+  const image = body.image?.trim() || "/shop/split-crew.png";
   const imageFit = body.imageFit === "cover" ? "cover" : "contain";
   const imageBg = body.imageBg?.trim() || (category === "bottoms" ? "#eceae4" : "#cfc9c0");
   const status = body.status === "forthcoming" ? "forthcoming" : "available";

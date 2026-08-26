@@ -6,6 +6,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { ColorChip } from "@/components/ColorChip";
 import { useLenis } from "@/context/LenisContext";
 import {
+  DEFAULT_ON_HAND,
   GARMENT_SIZES,
   HOUSE_COLORS,
   hexesMatch,
@@ -63,7 +64,7 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [featured, setFeatured] = useState(startedFeatured);
-  const [image, setImage] = useState(product?.image ?? "/baggy top.jpg");
+  const [image, setImage] = useState(product?.image ?? "/shop/split-crew.png");
   const [colors, setColors] = useState<Swatch[]>(() => defaultSwatches(product));
   const [sizes, setSizes] = useState<GarmentSize[]>(() => defaultSizes(product));
   const [stock, setStock] = useState<Record<string, number>>(() => defaultStockMap(product));
@@ -81,7 +82,7 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
     }
     const palette = colors
       .map((swatch) => ({
-        label: swatch.label.trim(),
+        label: swatch.label.trim().toUpperCase(),
         hex: swatch.hex.trim() || "#111111",
       }))
       .filter((swatch) => swatch.label);
@@ -237,9 +238,30 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
     );
   }, 0);
 
-  const showPreview = () => {
+  useEffect(() => {
+    const names = namedColors.map((swatch) => swatch.label.trim().toUpperCase());
+    if (names.length === 0 || sizes.length === 0) return;
+    setStock((current) => {
+      const next = { ...current };
+      let changed = false;
+      const donor = names[0];
+      for (const name of names) {
+        const hasAny = sizes.some((size) => current[stockCellKey(name, size)] !== undefined);
+        if (hasAny) continue;
+        for (const size of sizes) {
+          const fromDonor = donor !== name ? current[stockCellKey(donor, size)] : undefined;
+          next[stockCellKey(name, size)] =
+            fromDonor !== undefined ? fromDonor : DEFAULT_ON_HAND;
+          changed = true;
+        }
+      }
+      return changed ? next : current;
+    });
+  }, [namedColors, sizes]);
+
+  const pieceFromForm = (): CatalogProduct | null => {
     const form = formRef.current;
-    if (!form) return;
+    if (!form) return null;
     const data = new FormData(form);
     const palette = colors
       .map((swatch) => ({
@@ -259,7 +281,7 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
     const previewSizes = sizes.length > 0 ? sizes : [...GARMENT_SIZES];
     const previewPalette = palette.length > 0 ? palette : [{ label: "BLACK", hex: "#111111" }];
     const cells = stockCellsFor(previewPalette, previewSizes);
-    setPreview({
+    return {
       id: product?.id ?? "preview",
       look,
       name,
@@ -275,7 +297,12 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
       imageBg: String(data.get("imageBg") ?? "").trim() || "#cfc9c0",
       status: data.get("status") === "forthcoming" ? "forthcoming" : "available",
       stock: cells,
-    });
+    };
+  };
+
+  const showPreview = () => {
+    const next = pieceFromForm();
+    if (next) setPreview(next);
   };
 
   useEffect(() => {
@@ -297,6 +324,28 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
       document.body.style.overflow = previous;
     };
   }, [preview, lenis]);
+
+  const previewOpen = Boolean(preview);
+
+  useEffect(() => {
+    if (!previewOpen) return;
+    const next = pieceFromForm();
+    if (next) setPreview(next);
+    const form = formRef.current;
+    if (!form) return;
+    const sync = () => {
+      const piece = pieceFromForm();
+      if (piece) setPreview(piece);
+    };
+    form.addEventListener("input", sync);
+    form.addEventListener("change", sync);
+    return () => {
+      form.removeEventListener("input", sync);
+      form.removeEventListener("change", sync);
+    };
+    // pieceFromForm reads the open form plus colors, sizes, stock, and image.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [colors, sizes, stock, image, previewOpen]);
 
   return (
     <>
@@ -715,7 +764,13 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
           data-lenis-prevent
         >
           <ProductCard
-            key={`${preview.name}-${preview.image}-${preview.colors.length}`}
+            key={[
+              preview.name,
+              preview.image,
+              preview.colors.map((swatch) => `${swatch.label}:${swatch.hex}`).join("|"),
+              (preview.sizes ?? []).join("|"),
+              (preview.stock ?? []).map((cell) => `${cell.color}:${cell.size}:${cell.count}`).join("|"),
+            ].join("::")}
             product={preview}
             preview
           />

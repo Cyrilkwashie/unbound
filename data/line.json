@@ -1,20 +1,20 @@
 {
   "products": [
     {
-      "id": "darkness-baggy-top",
+      "id": "split-crew",
       "look": "01",
-      "name": "DARKNESS BAGGY TOP",
-      "kicker": "GARMENT 01 / BAGGY TOP",
+      "name": "SPLIT CREW",
+      "kicker": "GARMENT 01 / CREW",
       "category": "tops",
       "price": 165,
       "color": "BLACK / WHITE",
       "colors": [
         {
-          "label": "Black",
+          "label": "BLACK",
           "hex": "#111111"
         },
         {
-          "label": "White",
+          "label": "WHITE",
           "hex": "#F4F1EA"
         }
       ],
@@ -39,17 +39,17 @@
         {
           "color": "BLACK",
           "size": "M",
-          "count": 0
+          "count": 5
         },
         {
           "color": "BLACK",
           "size": "L",
-          "count": 0
+          "count": 5
         },
         {
           "color": "BLACK",
           "size": "XL",
-          "count": 0
+          "count": 5
         },
         {
           "color": "WHITE",
@@ -64,291 +64,572 @@
         {
           "color": "WHITE",
           "size": "M",
-          "count": 0
+          "count": 5
         },
         {
           "color": "WHITE",
           "size": "L",
-          "count": 0
+          "count": 5
         },
         {
           "color": "WHITE",
           "size": "XL",
-          "count": 0
+          "count": 5
         }
       ],
-      "description": "Oversized layered tee — black over white. Thorn graphic across the chest, sleeve marks down the arms. Drapes rather than fits in.",
-      "image": "/baggy top.jpg",
+      "description": "A crew that splits the body — black into white, diagonal, oversized. Hangs off the shoulder rather than sitting on it.",
+      "image": "/shop/split-crew.png",
       "imageFit": "contain",
-      "imageBg": "#cfc9c0",
+      "imageBg": "#eceae4",
       "status": "available"
     },
     {
-      "id": "baggy-cargo",
+      "id": "letter-crew",
       "look": "02",
-      "name": "BAGGY CARGO",
-      "kicker": "GARMENT 02 / TROUSER",
+      "name": "LETTER CREW",
+      "kicker": "GARMENT 02 / CREW",
+      "category": "tops",
+      "price": 175,
+      "color": "OLIVE / SAND",
+      "colors": [
+        {
+          "label": "OLIVE",
+          "hex": "#3A4332"
+        },
+        {
+          "label": "SAND",
+          "hex": "#C9B89A"
+        }
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": [
+        {
+          "color": "OLIVE",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "OLIVE",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "OLIVE",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "OLIVE",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "OLIVE",
+          "size": "XL",
+          "count": 5
+        },
+        {
+          "color": "SAND",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "SAND",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "SAND",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "SAND",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "SAND",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "Layered crew, short sleeve over long. Heavy, baggy, the mark held on the chest.",
+      "image": "/shop/letter-crew.png",
+      "imageFit": "contain",
+      "imageBg": "#e8e4dc",
+      "status": "available"
+    },
+    {
+      "id": "angel-pant",
+      "look": "03",
+      "name": "ANGEL PANT",
+      "kicker": "GARMENT 03 / PANT",
       "category": "bottoms",
       "price": 195,
       "color": "BLACK",
       "colors": [
         {
-          "label": "Black",
+          "label": "BLACK",
           "hex": "#111111"
         }
       ],
-      "description": "Architectural pockets. Relaxed fall. Gothic cross marks down the leg. Travels with the body, not against it.",
-      "image": "/baggy cargo.jpg",
-      "imageFit": "cover",
-      "imageBg": "#eceae4",
-      "status": "available",
       "sizes": [
         "XS",
         "S",
         "M",
         "L",
         "XL"
-      ]
+      ],
+      "stock": [
+        {
+          "color": "BLACK",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "Baggy black sweatpant. Wings across the hip, crosses down the leg. Pools at the shoe.",
+      "image": "/shop/angel-pant.png",
+      "imageFit": "cover",
+      "imageBg": "#111111",
+      "status": "available"
     },
     {
-      "id": "thorn-layer-tee",
-      "look": "03",
-      "name": "THORN LAYER TEE",
-      "kicker": "GARMENT 03 / TEE",
+      "id": "grateful-pant",
+      "look": "04",
+      "name": "GRATEFUL PANT",
+      "kicker": "GARMENT 04 / PANT",
+      "category": "bottoms",
+      "price": 185,
+      "color": "GREY",
+      "colors": [
+        {
+          "label": "GREY",
+          "hex": "#6E6E6E"
+        }
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": [
+        {
+          "color": "GREY",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "Heather grey, wide through the leg. Script down the side. Worn loose, stacked at the ankle.",
+      "image": "/shop/grateful-pant.png",
+      "imageFit": "cover",
+      "imageBg": "#cfc9c0",
+      "status": "available"
+    },
+    {
+      "id": "layer-longsleeve",
+      "look": "05",
+      "name": "LAYER LONGSLEEVE",
+      "kicker": "GARMENT 05 / LONGSLEEVE",
       "category": "tops",
       "price": 145,
       "color": "BLACK / WHITE",
       "colors": [
         {
-          "label": "Black",
+          "label": "BLACK",
           "hex": "#111111"
         },
         {
-          "label": "White",
+          "label": "WHITE",
           "hex": "#F4F1EA"
         }
       ],
-      "description": "The lighter layer of the system. Same thorn mark, shorter drape, worn under outer pieces.",
-      "image": "/baggy top.jpg",
-      "imageFit": "contain",
-      "imageBg": "#cfc9c0",
-      "status": "available",
       "sizes": [
         "XS",
         "S",
         "M",
         "L",
         "XL"
-      ]
-    },
-    {
-      "id": "cross-cargo-wide",
-      "look": "04",
-      "name": "CROSS CARGO WIDE",
-      "kicker": "GARMENT 04 / TROUSER",
-      "category": "bottoms",
-      "price": 210,
-      "color": "BLACK",
-      "colors": [
-        {
-          "label": "Black",
-          "hex": "#111111"
-        }
       ],
-      "description": "A wider fall of the cargo. Extra volume through the thigh, same pocket architecture, same cross marks.",
-      "image": "/baggy cargo.jpg",
-      "imageFit": "cover",
-      "imageBg": "#eceae4",
-      "status": "available",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL"
-      ]
-    },
-    {
-      "id": "motion-shell",
-      "look": "05",
-      "name": "MOTION SHELL",
-      "kicker": "GARMENT 05 / OUTER",
-      "category": "outer",
-      "price": 245,
-      "color": "BLACK / WHITE",
-      "colors": [
+      "stock": [
         {
-          "label": "Black",
-          "hex": "#111111"
+          "color": "BLACK",
+          "size": "XS",
+          "count": 5
         },
         {
-          "label": "White",
-          "hex": "#F4F1EA"
+          "color": "BLACK",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "XL",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "XL",
+          "count": 5
         }
       ],
-      "description": "A shell for movement. Layered, open through the body, worn over the baggy top.",
-      "image": "/baggy top.jpg",
+      "description": "Black short over white long. Marks on the chest and down the arms. Baggy through the body.",
+      "image": "/shop/layer-longsleeve.png",
       "imageFit": "contain",
-      "imageBg": "#cfc9c0",
-      "status": "available",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL"
-      ]
+      "imageBg": "#c8c4bc",
+      "status": "available"
     },
     {
-      "id": "sigil-longsleeve",
+      "id": "city-crew",
       "look": "06",
-      "name": "SIGIL LONGSLEEVE",
-      "kicker": "GARMENT 06 / LONGSLEEVE",
+      "name": "CITY CREW",
+      "kicker": "GARMENT 06 / CREW",
       "category": "tops",
-      "price": 175,
-      "color": "BLACK / WHITE",
+      "price": 155,
+      "color": "WHITE",
       "colors": [
         {
-          "label": "Black",
-          "hex": "#111111"
-        },
-        {
-          "label": "White",
+          "label": "WHITE",
           "hex": "#F4F1EA"
         }
       ],
-      "description": "Long sleeve with forearm marks. Heavyweight cotton, dropped shoulder, the graphic held close to the dark.",
-      "image": "/baggy top.jpg",
-      "imageFit": "contain",
-      "imageBg": "#cfc9c0",
-      "status": "available",
       "sizes": [
         "XS",
         "S",
         "M",
         "L",
         "XL"
-      ]
+      ],
+      "stock": [
+        {
+          "color": "WHITE",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "White crew, heavyweight, dropped shoulder. A small mark on the chest. Clean hang.",
+      "image": "/shop/city-crew.png",
+      "imageFit": "contain",
+      "imageBg": "#d8d6d0",
+      "status": "available"
     },
     {
-      "id": "relaxed-trouser",
+      "id": "never-alone-pant",
       "look": "07",
-      "name": "RELAXED TROUSER",
-      "kicker": "GARMENT 07 / TROUSER",
+      "name": "NEVER ALONE PANT",
+      "kicker": "GARMENT 07 / PANT",
       "category": "bottoms",
       "price": 185,
       "color": "BLACK",
       "colors": [
         {
-          "label": "Black",
+          "label": "BLACK",
           "hex": "#111111"
         }
       ],
-      "description": "The cargo without the shout. Cleaner face, same relaxed fall, still travels with the body.",
-      "image": "/baggy cargo.jpg",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": [
+        {
+          "color": "BLACK",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "Black baggy sweatpant. Type on the thigh, type down the leg. Hands in the pocket, stacked on the shoe.",
+      "image": "/shop/never-alone-pant.png",
       "imageFit": "cover",
-      "imageBg": "#eceae4",
-      "status": "available",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL"
-      ]
+      "imageBg": "#1a1a1a",
+      "status": "available"
     },
     {
-      "id": "void-overshirt",
+      "id": "flame-crew",
       "look": "08",
-      "name": "VOID OVERSHIRT",
-      "kicker": "GARMENT 08 / OUTER",
-      "category": "outer",
-      "price": 220,
-      "color": "BLACK / WHITE",
-      "colors": [
-        {
-          "label": "Black",
-          "hex": "#111111"
-        },
-        {
-          "label": "White",
-          "hex": "#F4F1EA"
-        }
-      ],
-      "description": "Shirt weight, jacket attitude. Worn open over the tee or closed as the outer layer.",
-      "image": "/baggy top.jpg",
-      "imageFit": "contain",
-      "imageBg": "#cfc9c0",
-      "status": "available",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL"
-      ]
-    },
-    {
-      "id": "graphic-tee-02",
-      "look": "09",
-      "name": "GRAPHIC TEE 02",
-      "kicker": "GARMENT 09 / TEE",
+      "name": "FLAME CREW",
+      "kicker": "GARMENT 08 / CREW",
       "category": "tops",
-      "price": 135,
-      "color": "BLACK / WHITE",
-      "colors": [
-        {
-          "label": "Black",
-          "hex": "#111111"
-        },
-        {
-          "label": "White",
-          "hex": "#F4F1EA"
-        }
-      ],
-      "description": "Second graphic in the line. Oversized, heavyweight, printed to sit in the dark rather than shout from it.",
-      "image": "/baggy top.jpg",
-      "imageFit": "contain",
-      "imageBg": "#cfc9c0",
-      "status": "available",
-      "sizes": [
-        "XS",
-        "S",
-        "M",
-        "L",
-        "XL"
-      ]
-    },
-    {
-      "id": "utility-pant",
-      "look": "10",
-      "name": "UTILITY PANT",
-      "kicker": "GARMENT 10 / PANT",
-      "category": "bottoms",
-      "price": 205,
+      "price": 175,
       "color": "BLACK",
       "colors": [
         {
-          "label": "Black",
+          "label": "BLACK",
           "hex": "#111111"
         }
       ],
-      "description": "Utility without costume. Pocket stack, wide leg, a work pant for the street.",
-      "image": "/baggy cargo.jpg",
-      "imageFit": "cover",
-      "imageBg": "#eceae4",
-      "status": "available",
       "sizes": [
         "XS",
         "S",
         "M",
         "L",
         "XL"
-      ]
+      ],
+      "stock": [
+        {
+          "color": "BLACK",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "Black crew with a faded hem. Type on the chest. Oversized, ribbed at collar, cuff, and waist.",
+      "image": "/shop/flame-crew.png",
+      "imageFit": "contain",
+      "imageBg": "#6a6864",
+      "status": "available"
+    },
+    {
+      "id": "spider-pant",
+      "look": "09",
+      "name": "SPIDER PANT",
+      "kicker": "GARMENT 09 / PANT",
+      "category": "bottoms",
+      "price": 195,
+      "color": "GREY",
+      "colors": [
+        {
+          "label": "GREY",
+          "hex": "#6E6E6E"
+        }
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": [
+        {
+          "color": "GREY",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "GREY",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "Wide grey sweatpant. Web and spider down the legs. Drawstring, pocket, pools at the ankle.",
+      "image": "/shop/spider-pant.png",
+      "imageFit": "cover",
+      "imageBg": "#d0cdc6",
+      "status": "available"
+    },
+    {
+      "id": "web-pant",
+      "look": "10",
+      "name": "WEB PANT",
+      "kicker": "GARMENT 10 / PANT",
+      "category": "bottoms",
+      "price": 195,
+      "color": "BLACK",
+      "colors": [
+        {
+          "label": "BLACK",
+          "hex": "#111111"
+        }
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": [
+        {
+          "color": "BLACK",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "M",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "L",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "XL",
+          "count": 5
+        }
+      ],
+      "description": "Black baggy pant, cream waist. A web on the thigh, a spider hanging from it. Stacked at the shoe.",
+      "image": "/shop/web-pant.png",
+      "imageFit": "cover",
+      "imageBg": "#111111",
+      "status": "available"
     }
   ],
   "featuredIds": [
-    "baggy-cargo",
-    "darkness-baggy-top"
+    "split-crew",
+    "angel-pant"
   ]
 }

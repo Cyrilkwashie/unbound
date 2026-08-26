@@ -37,7 +37,7 @@ export const HomeLooks = ({
           </h2>
         </motion.div>
         <motion.p className="hidden max-w-xs text-right text-sm leading-7 text-mist md:block" {...fade}>
-          Two baggy looks from the film. Now yours.
+          Two baggy looks from the rail. Now yours.
         </motion.p>
       </div>
 

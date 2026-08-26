@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useBag } from "@/context/BagContext";
 import { ProductPhoto } from "@/components/ProductPhoto";
@@ -28,12 +28,18 @@ export const ProductCard = ({ product, reverse = false, preview = false }: Produ
   const palette = inStockColors(product);
   const startColor = palette[0]?.label ?? product.colors[0]?.label ?? product.color;
   const [color, setColor] = useState(startColor);
-  const sizes = inStockSizes(product, color);
   const [qtys, setQtys] = useState<Record<string, number>>({});
   const [added, setAdded] = useState(false);
+  const sizes = inStockSizes(product, color);
   const soldOut = isSoldOut(product);
   const taking = Object.entries(qtys).filter(([, qty]) => qty > 0);
   const canTake = !soldOut && taking.length > 0;
+
+  useEffect(() => {
+    const next = inStockColors(product);
+    if (next.some((swatch) => swatch.label === color)) return;
+    setColor(next[0]?.label ?? product.colors[0]?.label ?? product.color);
+  }, [product, color]);
   const reveal = preview
     ? { initial: { opacity: 1, y: 0 }, animate: { opacity: 1, y: 0 } }
     : {

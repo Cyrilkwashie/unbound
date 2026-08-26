@@ -41,7 +41,8 @@ export default function Home({ looks, pieceCount }: HomeProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async ({ res }) => {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
   try {
     const line = readLine();
     return {

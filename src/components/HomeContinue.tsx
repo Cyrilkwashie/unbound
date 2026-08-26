@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { CampaignStill } from "@/components/CampaignStill";
-import { FEATURED_FRAMES } from "@/lib/frames";
+import { ProductPhoto } from "@/components/ProductPhoto";
+import { PRODUCT_IMAGES } from "@/lib/products";
 
 const fade = {
   initial: { opacity: 0, y: 28 },
@@ -23,13 +23,15 @@ export const HomeContinue = () => {
     <section className="relative bg-void-0">
       <div className="grid items-stretch lg:grid-cols-12">
         <motion.div className="relative min-h-[52vh] overflow-hidden lg:col-span-7 lg:min-h-[72vh]" {...fade}>
-          <CampaignStill
-            frame={FEATURED_FRAMES.editorial}
-            alt="UNBOUND campaign still"
-            className="absolute inset-0 h-full w-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-void-0/35" />
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-void-0/70 max-lg:bg-gradient-to-t max-lg:from-void-0/80 max-lg:to-transparent" />
+          <Link href="/shop/flame-crew" data-cursor="VIEW" data-cursor-grow="true" className="absolute inset-0 block">
+            <ProductPhoto
+              src={PRODUCT_IMAGES.house}
+              alt="FLAME CREW"
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-void-0/35" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-void-0/70 max-lg:bg-gradient-to-t max-lg:from-void-0/80 max-lg:to-transparent" />
+          </Link>
         </motion.div>
 
         <motion.div

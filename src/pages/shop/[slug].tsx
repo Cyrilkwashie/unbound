@@ -49,6 +49,7 @@ export default function ShopProductPage({ product, related }: ShopProductPagePro
 }
 
 export const getServerSideProps: GetServerSideProps<ShopProductPageProps> = async (context) => {
+  context.res.setHeader("Cache-Control", "no-store, max-age=0");
   const slug = context.params?.slug;
   const id = Array.isArray(slug) ? slug[0] : slug;
   let products: CatalogProduct[] = [];
