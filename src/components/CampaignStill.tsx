@@ -13,6 +13,8 @@ export const CampaignStill = ({ frame, alt, className }: CampaignStillProps) => 
       src={getFrameSrc(frame)}
       alt={alt}
       className={className}
+      decoding="async"
+      draggable={false}
       onError={(event) => {
         event.currentTarget.style.opacity = "0";
       }}

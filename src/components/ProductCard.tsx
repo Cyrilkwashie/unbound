@@ -17,6 +17,7 @@ import {
   type GarmentSize,
 } from "@/lib/products";
 import { money } from "@/lib/money";
+import { restTransform } from "@/lib/rest-transform";
 
 type ProductCardProps = {
   product: CatalogProduct;
@@ -42,11 +43,12 @@ export const ProductCard = ({ product, reverse = false, preview = false }: Produ
     setColor(next[0]?.label ?? product.colors[0]?.label ?? product.color);
   }, [product, color]);
   const reveal = preview
-    ? { initial: { opacity: 1, y: 0 }, animate: { opacity: 1, y: 0 } }
+    ? { initial: { opacity: 1 }, animate: { opacity: 1 } }
     : {
         initial: { opacity: 0, y: 24 },
         whileInView: { opacity: 1, y: 0 },
         viewport: { once: true, margin: "-10%" },
+        ...restTransform,
       };
 
   const maxFor = (option: GarmentSize) => stockCount(product, color, option) ?? 0;

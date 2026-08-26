@@ -8,12 +8,14 @@ import {
   type CatalogProduct,
 } from "@/lib/products";
 import { money } from "@/lib/money";
+import { restTransform } from "@/lib/rest-transform";
 
 const fade = {
   initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-12%" },
   transition: { duration: 1.05, ease: [0.22, 1, 0.36, 1] },
+  ...restTransform,
 };
 
 export const HomeLooks = ({

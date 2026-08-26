@@ -28,6 +28,7 @@ export class FrameController {
   private drawRaf = 0;
   private nearbyRaf = 0;
   private dpr = 1;
+  private viewScale = 1.045;
   private destroyed = false;
   private backgroundTimer: number | null = null;
 
@@ -65,6 +66,12 @@ export class FrameController {
     this.targetFrame = clamp(next, FRAME_START, FRAME_START + FRAME_COUNT - 1);
     this.scheduleDraw();
     this.scheduleNearby();
+  }
+
+  setViewScale(scale: number) {
+    if (Math.abs(scale - this.viewScale) < 0.0005) return;
+    this.viewScale = scale;
+    this.scheduleDraw(true);
   }
 
   showStaticFrame(frame = FEATURED_FRAMES.reducedMotion) {
@@ -240,9 +247,14 @@ export class FrameController {
       dx = (canvas.width - drawWidth) / 2;
     }
 
+    ctx.save();
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.scale(this.viewScale, this.viewScale);
+    ctx.translate(-canvas.width / 2, -canvas.height / 2);
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
     ctx.drawImage(image, dx, dy, drawWidth, drawHeight);
+    ctx.restore();
     this.lastDrawn = this.targetFrame;
   }
 

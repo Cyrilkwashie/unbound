@@ -7,8 +7,15 @@ type ProductPhotoProps = {
 };
 
 export const ProductPhoto = ({ src, alt, className }: ProductPhotoProps) => {
+  const href = productSrc(src);
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={productSrc(src)} alt={alt} className={className} />
+    <img
+      src={href}
+      alt={alt}
+      className={className}
+      decoding="async"
+      draggable={false}
+    />
   );
 };

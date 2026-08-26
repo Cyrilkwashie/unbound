@@ -31,8 +31,11 @@ export const Hero = () => {
 
   const apply = useCallback(
     (progress: number) => {
-      if (!reducedMotion) controller?.setProgress(progress);
       const overlay = overlayFromProgress(progress);
+      if (!reducedMotion) {
+        controller?.setProgress(progress);
+        controller?.setViewScale(overlay.canvasScale);
+      }
 
       if (brandRef.current) {
         brandRef.current.style.opacity = String(overlay.brand);
@@ -47,7 +50,6 @@ export const Hero = () => {
         collectionRef.current.style.transform = `translate3d(0, ${12 - overlay.collection * 12}px, 0)`;
       }
       if (frameWrapRef.current) {
-        frameWrapRef.current.style.transform = `scale(${overlay.canvasScale})`;
         frameWrapRef.current.style.filter = overlay.canvasBlur
           ? `blur(${overlay.canvasBlur}px)`
           : "none";
@@ -91,11 +93,7 @@ export const Hero = () => {
       style={{ height: `${height}vh` }}
     >
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <div
-          ref={frameWrapRef}
-          className="absolute inset-0 will-change-transform"
-          style={{ transformOrigin: "center center" }}
-        >
+        <div ref={frameWrapRef} className="absolute inset-0">
           <ScrollFrameSequence className="h-full w-full" />
         </div>
 
