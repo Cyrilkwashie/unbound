@@ -60,7 +60,8 @@ export const SmoothScrollProvider = ({ children }: { children: ReactNode }) => {
   }, [router.events]);
 
   useEffect(() => {
-    if (!isReady || reducedMotion) return;
+    const isAtelier = router.pathname.startsWith("/atelier");
+    if (!isReady || reducedMotion || isAtelier) return;
 
     const instance = new Lenis({
       autoRaf: true,
@@ -77,7 +78,7 @@ export const SmoothScrollProvider = ({ children }: { children: ReactNode }) => {
       instance.destroy();
       setLenis(null);
     };
-  }, [isReady, reducedMotion]);
+  }, [isReady, reducedMotion, router.pathname]);
 
   return <LenisContext.Provider value={lenis}>{children}</LenisContext.Provider>;
 };

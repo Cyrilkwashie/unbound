@@ -35,7 +35,10 @@ export const AtelierShell = ({ title, kicker, children }: AtelierShellProps) => 
   const nav = (
     <nav className="flex flex-col gap-5" aria-label="Atelier">
       {ATELIER_NAV.map((item) => {
-        const active = router.pathname === item.href;
+        const active =
+          item.href === "/atelier/line"
+            ? router.pathname.startsWith("/atelier/line")
+            : router.pathname === item.href;
         return (
           <Link
             key={item.href}

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   ORDER_STATUS,
   formatPlaced,
@@ -8,7 +8,14 @@ import {
   type AtelierOrder,
   type OrderStatus,
 } from "@/lib/atelier-books";
-import type { CatalogProduct } from "@/lib/products";
+import {
+  GARMENT_SIZES,
+  inStockColors,
+  inStockSizes,
+  stockCount,
+  tracksStock,
+  type CatalogProduct,
+} from "@/lib/products";
 
 type OrdersBoardProps = {
   orders: AtelierOrder[];
@@ -21,6 +28,28 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
   const [error, setError] = useState("");
   const [productId, setProductId] = useState(products[0]?.id ?? "");
   const selected = products.find((item) => item.id === productId);
+  const saleColors = selected ? inStockColors(selected) : [];
+  const [saleColor, setSaleColor] = useState(saleColors[0]?.label ?? "");
+  const saleSizes = selected ? inStockSizes(selected, saleColor) : [];
+  const [saleSize, setSaleSize] = useState<string>(saleSizes.includes("M") ? "M" : saleSizes[0] ?? "");
+  const leftover =
+    selected && saleSize
+      ? stockCount(selected, saleColor, saleSize as (typeof GARMENT_SIZES)[number])
+      : null;
+
+  useEffect(() => {
+    const piece = products.find((item) => item.id === productId);
+    if (!piece) {
+      setSaleSize("");
+      setSaleColor("");
+      return;
+    }
+    const nextColors = inStockColors(piece);
+    const nextColor = nextColors[0]?.label ?? "";
+    const nextSizes = inStockSizes(piece, nextColor);
+    setSaleColor(nextColor);
+    setSaleSize(nextSizes.includes("M") ? "M" : nextSizes[0] ?? "");
+  }, [productId, products]);
 
   const record = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -37,6 +66,8 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
         client: form.get("client"),
         total: form.get("total"),
         status: form.get("status"),
+        size: saleSize,
+        color: saleColor,
       }),
     });
     if (!response.ok) {
@@ -65,8 +96,8 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
       <form className="max-w-xl border-b border-ivory/10 pb-16" onSubmit={record}>
         <p className="text-[10px] tracking-[0.32em] text-mist">RECORD A SALE</p>
         <p className="mt-4 max-w-md text-sm leading-7 text-mist">
-          A ticket written here hits The Till and The List. Use it for studio sales,
-          drops, and anything that did not come through the bag.
+          A ticket written here hits The Till and The List. Use it for sales that did not
+          come through the bag.
         </p>
 
         <label className="mt-10 block text-[10px] tracking-[0.32em] text-mist" htmlFor="sale-piece">
@@ -77,7 +108,7 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
           name="productId"
           value={productId}
           onChange={(event) => setProductId(event.target.value)}
-          className="mt-4 w-full appearance-none border-b border-ivory/20 bg-transparent pb-3 text-sm tracking-[0.08em] text-ivory outline-none"
+          className="mt-4 w-full appearance-none border-b border-ivory/20 bg-void-0 pb-3 text-sm tracking-[0.08em] text-ivory outline-none"
         >
           {products.map((product) => (
             <option key={product.id} value={product.id}>
@@ -85,6 +116,58 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
             </option>
           ))}
         </select>
+
+        <div className="grid gap-8 md:grid-cols-2">
+          <div>
+            <label className="mt-10 block text-[10px] tracking-[0.32em] text-mist" htmlFor="sale-color">
+              COLOR
+            </label>
+            <select
+              id="sale-color"
+              value={saleColor}
+              onChange={(event) => {
+                const next = event.target.value;
+                setSaleColor(next);
+                if (!selected) return;
+                const nextSizes = inStockSizes(selected, next);
+                setSaleSize(nextSizes.includes("M") ? "M" : nextSizes[0] ?? "");
+              }}
+              className="mt-4 w-full appearance-none border-b border-ivory/20 bg-void-0 pb-3 text-sm tracking-[0.08em] text-ivory outline-none"
+            >
+              {saleColors.length > 0 ? (
+                saleColors.map((swatch) => (
+                  <option key={swatch.label} value={swatch.label}>
+                    {swatch.label}
+                  </option>
+                ))
+              ) : (
+                <option value={saleColor}>{saleColor || "—"}</option>
+              )}
+            </select>
+          </div>
+          <div>
+            <label className="mt-10 block text-[10px] tracking-[0.32em] text-mist" htmlFor="sale-size">
+              SIZE
+            </label>
+            <select
+              id="sale-size"
+              value={saleSize}
+              onChange={(event) => setSaleSize(event.target.value)}
+              className="mt-4 w-full appearance-none border-b border-ivory/20 bg-void-0 pb-3 text-sm tracking-[0.08em] text-ivory outline-none"
+            >
+              {saleSizes.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        {selected && tracksStock(selected) ? (
+          <p className="mt-6 text-[10px] tracking-[0.28em] text-mist">
+            {leftover === null ? "OPEN" : leftover === 0 ? "NONE LEFT" : `${String(leftover).padStart(2, "0")} LEFT`}
+          </p>
+        ) : null}
 
         <label className="mt-10 block text-[10px] tracking-[0.32em] text-mist" htmlFor="sale-client">
           CLIENT
@@ -121,10 +204,10 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
               id="sale-status"
               name="status"
               defaultValue="paid"
-              className="mt-4 w-full appearance-none border-b border-ivory/20 bg-transparent pb-3 text-sm tracking-[0.08em] text-ivory outline-none"
+              className="mt-4 w-full appearance-none border-b border-ivory/20 bg-void-0 pb-3 text-sm tracking-[0.08em] text-ivory outline-none"
             >
               <option value="paid">PAID</option>
-              <option value="cutting">CUTTING</option>
+              <option value="cutting">PACKING</option>
               <option value="sent">SENT</option>
             </select>
           </div>
@@ -134,7 +217,7 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
 
         <button
           type="submit"
-          disabled={busy || products.length === 0}
+          disabled={busy || products.length === 0 || saleSizes.length === 0 || leftover === 0}
           className="mt-12 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory disabled:text-mist"
           data-cursor="VIEW"
         >
@@ -150,6 +233,7 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
               <th className="py-4 pr-4 font-normal">TICKET</th>
               <th className="py-4 pr-4 font-normal">DATE</th>
               <th className="py-4 pr-4 font-normal">PIECE</th>
+              <th className="py-4 pr-4 font-normal">MARK</th>
               <th className="py-4 pr-4 font-normal">CLIENT</th>
               <th className="py-4 pr-4 font-normal">STATUS</th>
               <th className="py-4 font-normal">TOTAL</th>
@@ -164,6 +248,9 @@ export const OrdersBoard = ({ orders, products }: OrdersBoardProps) => {
                 </td>
                 <td className="py-5 pr-4 font-display text-[12px] tracking-[0.12em] text-ivory">
                   {order.piece}
+                </td>
+                <td className="py-5 pr-4 text-[11px] tracking-[0.16em] text-mist">
+                  {[order.color, order.size].filter(Boolean).join(" / ") || "—"}
                 </td>
                 <td className="py-5 pr-4 text-[11px] tracking-[0.18em] text-mist">{order.client}</td>
                 <td className="py-5 pr-4">

@@ -27,7 +27,7 @@ export default function AtelierDeskPage({ pieceCount, listCount, orders }: DeskP
   const stats = [
     { label: "ON THE LINE", value: String(pieceCount).padStart(2, "0"), hint: "Products" },
     { label: "THE TILL", value: money(revenue), hint: "Revenue" },
-    { label: "OPEN ORDERS", value: String(open.length).padStart(2, "0"), hint: "To cut or send" },
+    { label: "OPEN ORDERS", value: String(open.length).padStart(2, "0"), hint: "To pack or send" },
     { label: "THE LIST", value: String(listCount).padStart(2, "0"), hint: "Clients" },
   ];
 

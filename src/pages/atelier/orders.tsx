@@ -25,7 +25,7 @@ export default function AtelierOrdersPage({ orders, products }: OrdersPageProps)
       <AtelierShell title="ORDERS" kicker="SALES — WRITE THE TICKET">
         <div className="mb-12 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <p className="max-w-md text-sm leading-7 text-mist">
-            Record a studio sale and it lands in The Till. Cutting means it is still here.
+            Record a sale and it lands in The Till. Packing means it is still here.
             Sent means it has left.
           </p>
           <p className="text-[10px] tracking-[0.28em] text-mist">

@@ -1,0 +1,354 @@
+{
+  "products": [
+    {
+      "id": "darkness-baggy-top",
+      "look": "01",
+      "name": "DARKNESS BAGGY TOP",
+      "kicker": "GARMENT 01 / BAGGY TOP",
+      "category": "tops",
+      "price": 165,
+      "color": "BLACK / WHITE",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        },
+        {
+          "label": "White",
+          "hex": "#F4F1EA"
+        }
+      ],
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "stock": [
+        {
+          "color": "BLACK",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "BLACK",
+          "size": "M",
+          "count": 0
+        },
+        {
+          "color": "BLACK",
+          "size": "L",
+          "count": 0
+        },
+        {
+          "color": "BLACK",
+          "size": "XL",
+          "count": 0
+        },
+        {
+          "color": "WHITE",
+          "size": "XS",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "S",
+          "count": 5
+        },
+        {
+          "color": "WHITE",
+          "size": "M",
+          "count": 0
+        },
+        {
+          "color": "WHITE",
+          "size": "L",
+          "count": 0
+        },
+        {
+          "color": "WHITE",
+          "size": "XL",
+          "count": 0
+        }
+      ],
+      "description": "Oversized layered tee — black over white. Thorn graphic across the chest, sleeve marks down the arms. Drapes rather than fits in.",
+      "image": "/baggy top.jpg",
+      "imageFit": "contain",
+      "imageBg": "#cfc9c0",
+      "status": "available"
+    },
+    {
+      "id": "baggy-cargo",
+      "look": "02",
+      "name": "BAGGY CARGO",
+      "kicker": "GARMENT 02 / TROUSER",
+      "category": "bottoms",
+      "price": 195,
+      "color": "BLACK",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        }
+      ],
+      "description": "Architectural pockets. Relaxed fall. Gothic cross marks down the leg. Travels with the body, not against it.",
+      "image": "/baggy cargo.jpg",
+      "imageFit": "cover",
+      "imageBg": "#eceae4",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "thorn-layer-tee",
+      "look": "03",
+      "name": "THORN LAYER TEE",
+      "kicker": "GARMENT 03 / TEE",
+      "category": "tops",
+      "price": 145,
+      "color": "BLACK / WHITE",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        },
+        {
+          "label": "White",
+          "hex": "#F4F1EA"
+        }
+      ],
+      "description": "The lighter layer of the system. Same thorn mark, shorter drape, worn under outer pieces.",
+      "image": "/baggy top.jpg",
+      "imageFit": "contain",
+      "imageBg": "#cfc9c0",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "cross-cargo-wide",
+      "look": "04",
+      "name": "CROSS CARGO WIDE",
+      "kicker": "GARMENT 04 / TROUSER",
+      "category": "bottoms",
+      "price": 210,
+      "color": "BLACK",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        }
+      ],
+      "description": "A wider fall of the cargo. Extra volume through the thigh, same pocket architecture, same cross marks.",
+      "image": "/baggy cargo.jpg",
+      "imageFit": "cover",
+      "imageBg": "#eceae4",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "motion-shell",
+      "look": "05",
+      "name": "MOTION SHELL",
+      "kicker": "GARMENT 05 / OUTER",
+      "category": "outer",
+      "price": 245,
+      "color": "BLACK / WHITE",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        },
+        {
+          "label": "White",
+          "hex": "#F4F1EA"
+        }
+      ],
+      "description": "A shell for movement. Layered, open through the body, worn over the baggy top.",
+      "image": "/baggy top.jpg",
+      "imageFit": "contain",
+      "imageBg": "#cfc9c0",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "sigil-longsleeve",
+      "look": "06",
+      "name": "SIGIL LONGSLEEVE",
+      "kicker": "GARMENT 06 / LONGSLEEVE",
+      "category": "tops",
+      "price": 175,
+      "color": "BLACK / WHITE",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        },
+        {
+          "label": "White",
+          "hex": "#F4F1EA"
+        }
+      ],
+      "description": "Long sleeve with forearm marks. Heavyweight cotton, dropped shoulder, the graphic held close to the dark.",
+      "image": "/baggy top.jpg",
+      "imageFit": "contain",
+      "imageBg": "#cfc9c0",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "relaxed-trouser",
+      "look": "07",
+      "name": "RELAXED TROUSER",
+      "kicker": "GARMENT 07 / TROUSER",
+      "category": "bottoms",
+      "price": 185,
+      "color": "BLACK",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        }
+      ],
+      "description": "The cargo without the shout. Cleaner face, same relaxed fall, still travels with the body.",
+      "image": "/baggy cargo.jpg",
+      "imageFit": "cover",
+      "imageBg": "#eceae4",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "void-overshirt",
+      "look": "08",
+      "name": "VOID OVERSHIRT",
+      "kicker": "GARMENT 08 / OUTER",
+      "category": "outer",
+      "price": 220,
+      "color": "BLACK / WHITE",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        },
+        {
+          "label": "White",
+          "hex": "#F4F1EA"
+        }
+      ],
+      "description": "Shirt weight, jacket attitude. Worn open over the tee or closed as the outer layer.",
+      "image": "/baggy top.jpg",
+      "imageFit": "contain",
+      "imageBg": "#cfc9c0",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "graphic-tee-02",
+      "look": "09",
+      "name": "GRAPHIC TEE 02",
+      "kicker": "GARMENT 09 / TEE",
+      "category": "tops",
+      "price": 135,
+      "color": "BLACK / WHITE",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        },
+        {
+          "label": "White",
+          "hex": "#F4F1EA"
+        }
+      ],
+      "description": "Second graphic in the line. Oversized, heavyweight, printed to sit in the dark rather than shout from it.",
+      "image": "/baggy top.jpg",
+      "imageFit": "contain",
+      "imageBg": "#cfc9c0",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    },
+    {
+      "id": "utility-pant",
+      "look": "10",
+      "name": "UTILITY PANT",
+      "kicker": "GARMENT 10 / PANT",
+      "category": "bottoms",
+      "price": 205,
+      "color": "BLACK",
+      "colors": [
+        {
+          "label": "Black",
+          "hex": "#111111"
+        }
+      ],
+      "description": "Utility without costume. Pocket stack, wide leg, a work pant for the street.",
+      "image": "/baggy cargo.jpg",
+      "imageFit": "cover",
+      "imageBg": "#eceae4",
+      "status": "available",
+      "sizes": [
+        "XS",
+        "S",
+        "M",
+        "L",
+        "XL"
+      ]
+    }
+  ],
+  "featuredIds": [
+    "baggy-cargo",
+    "darkness-baggy-top"
+  ]
+}

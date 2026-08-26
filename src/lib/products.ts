@@ -23,6 +23,12 @@ export type ProductCategory = Exclude<ShopCategory, "all">;
 export const GARMENT_SIZES = ["XS", "S", "M", "L", "XL"] as const;
 export type GarmentSize = (typeof GARMENT_SIZES)[number];
 
+export type StockCell = {
+  color: string;
+  size: GarmentSize;
+  count: number;
+};
+
 export type CatalogProduct = {
   id: string;
   look: string;
@@ -33,6 +39,7 @@ export type CatalogProduct = {
   color: string;
   colors: { label: string; hex: string }[];
   sizes?: GarmentSize[];
+  stock?: StockCell[];
   description: string;
   image: string;
   imageFit: "contain" | "cover";
@@ -43,11 +50,129 @@ export type CatalogProduct = {
 export const isGarmentSize = (value: string): value is GarmentSize =>
   (GARMENT_SIZES as readonly string[]).includes(value);
 
-const SWATCH_HEX: Record<string, string> = {
-  BLACK: "#111111",
-  WHITE: "#F4F1EA",
-  IVORY: "#F4F1EA",
+export const stockCellKey = (color: string, size: GarmentSize) =>
+  `${color.trim().toUpperCase()}::${size}`;
+
+export const DEFAULT_ON_HAND = 5;
+
+export const tracksStock = (product: Pick<CatalogProduct, "stock">) => Array.isArray(product.stock);
+
+export const stockCount = (
+  product: Pick<CatalogProduct, "stock">,
+  color: string,
+  size: GarmentSize
+): number | null => {
+  if (!product.stock) return null;
+  const mark = color.trim().toUpperCase();
+  const cell = product.stock.find((item) => item.color.toUpperCase() === mark && item.size === size);
+  return cell?.count ?? 0;
 };
+
+export const stockTotal = (product: Pick<CatalogProduct, "stock">): number | null => {
+  if (!product.stock) return null;
+  return product.stock.reduce((sum, cell) => sum + Math.max(0, cell.count), 0);
+};
+
+export const isSoldOut = (product: Pick<CatalogProduct, "stock">) =>
+  stockTotal(product) === 0;
+
+export const ensureStock = (
+  colors: { label: string }[],
+  sizes: GarmentSize[],
+  stock?: StockCell[]
+): StockCell[] => {
+  const map = new Map<string, number>();
+  for (const cell of stock ?? []) {
+    if (!isGarmentSize(cell.size)) continue;
+    map.set(
+      stockCellKey(cell.color, cell.size),
+      Math.max(0, Math.floor(Number(cell.count) || 0))
+    );
+  }
+  const fallback = stock && stock.length > 0 ? 0 : DEFAULT_ON_HAND;
+  const cells: StockCell[] = [];
+  for (const swatch of colors) {
+    const color = swatch.label.trim().toUpperCase();
+    if (!color) continue;
+    for (const size of sizes) {
+      const key = stockCellKey(color, size);
+      cells.push({ color, size, count: map.has(key) ? (map.get(key) as number) : fallback });
+    }
+  }
+  return cells;
+};
+
+export const inStockSizes = (
+  product: Pick<CatalogProduct, "sizes" | "stock">,
+  color: string
+): GarmentSize[] => {
+  const sizes = product.sizes?.length ? product.sizes : [...GARMENT_SIZES];
+  if (!product.stock) return sizes;
+  return sizes.filter((size) => (stockCount(product, color, size) ?? 0) > 0);
+};
+
+export const inStockColors = (product: Pick<CatalogProduct, "colors" | "sizes" | "stock">) => {
+  if (!product.stock) return product.colors;
+  return product.colors.filter((swatch) => inStockSizes(product, swatch.label).length > 0);
+};
+
+export const takeStock = (
+  product: CatalogProduct,
+  color: string,
+  size: GarmentSize,
+  qty = 1
+): CatalogProduct | { error: string } => {
+  if (!product.stock) return product;
+  const mark = color.trim().toUpperCase();
+  const next = product.stock.map((cell) => ({ ...cell }));
+  const index = next.findIndex((cell) => cell.color.toUpperCase() === mark && cell.size === size);
+  if (index < 0 || next[index].count < qty) return { error: "None left in that mark." };
+  next[index] = { ...next[index], count: next[index].count - qty };
+  return { ...product, stock: next };
+};
+
+const readStock = (
+  stock: StockCell[] | undefined,
+  colors: { label: string }[],
+  sizes: GarmentSize[]
+): StockCell[] => ensureStock(colors, sizes, stock);
+
+export const HOUSE_COLORS = [
+  { label: "BLACK", hex: "#111111" },
+  { label: "WHITE", hex: "#F4F1EA" },
+  { label: "IVORY", hex: "#EDE6D9" },
+  { label: "GREY", hex: "#6E6E6E" },
+  { label: "STONE", hex: "#9A9488" },
+  { label: "NAVY", hex: "#1C2433" },
+  { label: "OLIVE", hex: "#3A4332" },
+  { label: "BROWN", hex: "#3B2D24" },
+  { label: "BURGUNDY", hex: "#4A242C" },
+  { label: "SAND", hex: "#C9B89A" },
+] as const;
+
+export const normalizeHex = (value: string) => {
+  const raw = value.trim();
+  if (!raw) return "";
+  const withHash = raw.startsWith("#") ? raw : `#${raw}`;
+  if (/^#[0-9a-fA-F]{6}$/.test(withHash)) return withHash.toUpperCase();
+  if (/^#[0-9a-fA-F]{3}$/.test(withHash)) {
+    const r = withHash[1];
+    const g = withHash[2];
+    const b = withHash[3];
+    return `#${r}${r}${g}${g}${b}${b}`.toUpperCase();
+  }
+  return withHash.toUpperCase();
+};
+
+export const hexesMatch = (a: string, b: string) => {
+  const left = normalizeHex(a);
+  const right = normalizeHex(b);
+  return Boolean(left) && left === right;
+};
+
+const SWATCH_HEX: Record<string, string> = Object.fromEntries(
+  HOUSE_COLORS.map((swatch) => [swatch.label, swatch.hex])
+);
 
 export const slugify = (value: string) =>
   value
@@ -97,11 +222,13 @@ export const featuredFrom = (products: CatalogProduct[], featuredIds: string[]) 
 export const normalizeProduct = (product: CatalogProduct): CatalogProduct => {
   const sizes = (product.sizes ?? []).filter(isGarmentSize);
   const colors = product.colors?.length ? product.colors : swatchesFromColor(product.color);
+  const normalizedSizes = sizes.length > 0 ? sizes : [...GARMENT_SIZES];
   return {
     ...product,
-    sizes: sizes.length > 0 ? sizes : [...GARMENT_SIZES],
+    sizes: normalizedSizes,
     colors,
     color: product.color?.trim() || colors.map((swatch) => swatch.label).join(" / ").toUpperCase() || "BLACK",
+    stock: readStock(product.stock, colors, normalizedSizes),
   };
 };
 

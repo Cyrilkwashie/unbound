@@ -1,6 +1,7 @@
 import {
   slugify,
   swatchesFromColor,
+  ensureStock,
   isGarmentSize,
   type CatalogProduct,
   type GarmentSize,
@@ -25,6 +26,7 @@ export type LinePayload = {
   featured?: boolean;
   colors?: { label?: string; hex?: string }[];
   sizes?: string[];
+  stock?: { color?: string; size?: string; count?: number | string }[] | null;
 };
 
 export const productFromPayload = (
@@ -66,6 +68,21 @@ export const productFromPayload = (
 
   if (sizes.length === 0) return { error: "Choose at least one size." };
 
+  const names = new Set(palette.map((swatch) => swatch.label.trim().toUpperCase()));
+  const incoming =
+    body.stock == null
+      ? undefined
+      : body.stock
+          .map((cell) => {
+            const color = (cell.color ?? "").trim().toUpperCase();
+            const size = (cell.size ?? "").trim().toUpperCase();
+            const count = Math.max(0, Math.floor(Number(cell.count) || 0));
+            if (!names.has(color) || !isGarmentSize(size) || !sizes.includes(size)) return null;
+            return { color, size, count };
+          })
+          .filter((cell): cell is { color: string; size: GarmentSize; count: number } => Boolean(cell));
+  const stock = ensureStock(palette, sizes as GarmentSize[], incoming);
+
   return {
     id: options.id || slugify(name),
     look,
@@ -76,6 +93,7 @@ export const productFromPayload = (
     color,
     colors: palette,
     sizes: sizes as GarmentSize[],
+    stock,
     description: body.description?.trim() || "",
     image,
     imageFit,

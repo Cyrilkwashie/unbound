@@ -16,7 +16,7 @@ const NAV_LINKS = [
 
 export const Navbar = () => {
   const router = useRouter();
-  const { items, openBag, toggleBag } = useBag();
+  const { count, openBag, toggleBag } = useBag();
   const { isReady } = useFrameSequence();
   const lenis = useLenis();
   const [scrolled, setScrolled] = useState(false);
@@ -139,10 +139,10 @@ export const Navbar = () => {
               className="relative text-[10px] tracking-[0.28em] text-ivory/80 transition-colors duration-500 hover:text-ivory"
               onClick={openBag}
               data-cursor="SHOP"
-              aria-label={`Bag, ${items.length} items`}
+              aria-label={`Bag, ${count} items`}
             >
               BAG
-              <span className="ml-2 text-mist">{String(items.length).padStart(2, "0")}</span>
+              <span className="ml-2 text-mist">{String(count).padStart(2, "0")}</span>
             </button>
             <button
               type="button"
@@ -204,7 +204,7 @@ export const Navbar = () => {
                   toggleBag();
                 }}
               >
-                BAG / {String(items.length).padStart(2, "0")}
+                BAG / {String(count).padStart(2, "0")}
               </button>
             </div>
           </motion.div>

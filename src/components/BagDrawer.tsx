@@ -2,10 +2,11 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useBag } from "@/context/BagContext";
+import { QtyControl } from "@/components/QtyControl";
 
 export const BagDrawer = () => {
-  const { items, isOpen, closeBag } = useBag();
-  const total = items.reduce((sum, item) => sum + item.price, 0);
+  const { items, isOpen, closeBag, setQty, removeItem } = useBag();
+  const total = items.reduce((sum, item) => sum + item.price * item.qty, 0);
 
   return (
     <AnimatePresence>
@@ -45,13 +46,37 @@ export const BagDrawer = () => {
                 <p className="font-serif text-2xl italic text-ivory/80">Your bag is empty.</p>
               ) : (
                 <ul className="flex flex-col gap-8">
-                  {items.map((item, index) => (
-                    <li key={`${item.id}-${item.size}-${index}`} className="border-b border-ivory/10 pb-6">
-                      <p className="text-[11px] tracking-[0.22em] text-ivory">{item.name}</p>
-                      <p className="mt-2 text-[10px] tracking-[0.18em] text-mist">
-                        {item.color} / {item.size}
-                      </p>
-                      <p className="mt-3 font-serif italic text-ivory">${item.price}</p>
+                  {items.map((item) => (
+                    <li
+                      key={`${item.id}-${item.color}-${item.size}`}
+                      className="border-b border-ivory/10 pb-6"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-[11px] tracking-[0.22em] text-ivory">{item.name}</p>
+                          <p className="mt-2 text-[10px] tracking-[0.18em] text-mist">
+                            {item.color} / {item.size}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeItem(item)}
+                          className="text-[10px] tracking-[0.22em] text-mist"
+                          data-cursor="VIEW"
+                        >
+                          DROP
+                        </button>
+                      </div>
+                      <div className="mt-4 flex items-center justify-between">
+                        <QtyControl
+                          value={item.qty}
+                          min={1}
+                          max={20}
+                          label={`${item.name} ${item.size}`}
+                          onChange={(next) => setQty(item, next)}
+                        />
+                        <p className="font-serif italic text-ivory">${item.price * item.qty}</p>
+                      </div>
                     </li>
                   ))}
                 </ul>

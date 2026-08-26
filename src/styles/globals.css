@@ -78,6 +78,17 @@ body {
   background: linear-gradient(90deg, transparent, rgba(244, 241, 234, 0.35), transparent);
 }
 
+select {
+  background-color: #080808;
+  color: #f4f1ea;
+  color-scheme: dark;
+}
+
+select option {
+  background-color: #121212;
+  color: #f4f1ea;
+}
+
 .text-balance {
   text-wrap: balance;
 }

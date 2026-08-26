@@ -9,13 +9,14 @@ export default function CutPiecePage() {
   return (
     <>
       <Head>
-        <title>Cut a piece — UNBOUND</title>
+        <title>Put on the rail — UNBOUND</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AtelierShell title="CUT A PIECE" kicker="THE LINE — NEW GARMENT">
+      <AtelierShell title="PUT ON THE RAIL" kicker="THE LINE — NEW PIECE">
         <p className="mb-12 max-w-md text-sm leading-7 text-mist">
           Once saved, this piece is on the storefront. Forthcoming pieces stay off the shop
-          until you put them on the rail.
+          until you put them on the rail. Use SEE THE PIECE if you want to check the look
+          before you save.
         </p>
         <LineForm featured={false} />
       </AtelierShell>

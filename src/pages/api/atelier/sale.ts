@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { formatPlaced, nextTicket, type OrderStatus } from "@/lib/atelier-books";
 import { requireAtelierApi } from "@/lib/atelier-guard";
-import { readBooks, readLine, writeBooks } from "@/lib/house-store";
+import { readBooks, readLine, writeBooks, writeLine } from "@/lib/house-store";
+import { GARMENT_SIZES, isGarmentSize, takeStock } from "@/lib/products";
 
 const STATUSES: OrderStatus[] = ["paid", "cutting", "sent"];
 
@@ -23,6 +24,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const amount = Number.isFinite(total) && total >= 0 ? total : product.price;
   const status = STATUSES.includes(req.body?.status) ? (req.body.status as OrderStatus) : "paid";
   const placedAt = new Date().toISOString().slice(0, 10);
+  const allowedSizes = (product.sizes?.length ? product.sizes : [...GARMENT_SIZES]).filter(isGarmentSize);
+  const sizeRaw = typeof req.body?.size === "string" ? req.body.size.trim().toUpperCase() : "";
+  const size = isGarmentSize(sizeRaw) && allowedSizes.includes(sizeRaw) ? sizeRaw : allowedSizes[0];
+  const colorNames = (product.colors ?? []).map((swatch) => swatch.label);
+  const colorRaw = typeof req.body?.color === "string" ? req.body.color.trim() : "";
+  const color =
+    colorNames.find((label) => label.toUpperCase() === colorRaw.toUpperCase()) ??
+    colorNames[0] ??
+    product.color;
+
+  const taken = takeStock(product, color, size);
+  if ("error" in taken) return res.status(400).json({ error: taken.error });
 
   const books = readBooks();
   const order = {
@@ -36,12 +49,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     total: amount,
     status,
     source: "manual" as const,
+    color,
+    size,
   };
 
   const list = books.list.some((entry) => entry.mark === client)
     ? books.list
     : [{ mark: client, joined: formatPlaced(placedAt), source: "ORDER" }, ...books.list];
 
+  writeLine({
+    ...line,
+    products: line.products.map((item) => (item.id === product.id ? taken : item)),
+  });
   writeBooks({ ...books, orders: [order, ...books.orders], list });
   return res.status(200).json({ ok: true, id: order.id });
 }

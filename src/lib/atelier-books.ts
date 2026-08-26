@@ -7,7 +7,7 @@ export type OrderStatus = "paid" | "cutting" | "sent";
 
 export const ORDER_STATUS: Record<OrderStatus, string> = {
   paid: "PAID",
-  cutting: "CUTTING",
+  cutting: "PACKING",
   sent: "SENT",
 };
 
@@ -22,6 +22,8 @@ export type AtelierOrder = {
   total: number;
   status: OrderStatus;
   source: "manual" | "shop";
+  color?: string;
+  size?: string;
 };
 
 export type MonthTaking = {

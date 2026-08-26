@@ -6,7 +6,7 @@ import { ProductPhoto } from "@/components/ProductPhoto";
 import { isAtelierSession } from "@/lib/atelier";
 import { ATELIER_LOGIN } from "@/lib/atelier-guard";
 import { readLine } from "@/lib/house-store";
-import type { CatalogProduct } from "@/lib/products";
+import { isSoldOut, stockTotal, type CatalogProduct } from "@/lib/products";
 
 type LinePageProps = {
   products: CatalogProduct[];
@@ -23,14 +23,15 @@ export default function AtelierLinePage({ products, featuredIds }: LinePageProps
       <AtelierShell title="THE LINE" kicker="PRODUCTS — WHAT THE SHOP SHOWS">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <p className="max-w-md text-sm leading-7 text-mist">
-            Cut a piece, edit it, pull it. The public shop reads this line — not a frozen file.
+            Put a piece on the rail, edit it, pull it. The public shop reads this line — not a
+            frozen file.
           </p>
           <Link
             href="/atelier/line/cut"
             className="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory"
             data-cursor="VIEW"
           >
-            CUT A PIECE
+            PUT ON THE RAIL
             <span className="block h-px w-8 bg-ivory/70" />
           </Link>
         </div>
@@ -62,14 +63,34 @@ export default function AtelierLinePage({ products, featuredIds }: LinePageProps
                   <div className="md:col-span-4">
                     <p className="font-display text-sm tracking-[0.14em] text-ivory">{product.name}</p>
                     <p className="mt-2 text-[10px] tracking-[0.22em] text-mist">
-                      {product.category.toUpperCase()} · {product.color}
+                      {product.category.toUpperCase()}
                       {featuredIds.includes(product.id) ? " · OPENING" : ""}
+                    </p>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {(product.colors ?? []).map((swatch, index) => (
+                        <span
+                          key={`${swatch.label}-${index}`}
+                          className="h-3.5 w-3.5 border border-ivory/40"
+                          style={{ backgroundColor: swatch.hex }}
+                          title={swatch.label}
+                        />
+                      ))}
+                    </div>
+                    <p className="mt-2 text-[10px] tracking-[0.2em] text-stone">
+                      {(product.sizes ?? []).join("  ") || "—"}
                     </p>
                   </div>
                   <p className="font-serif text-2xl italic text-ivory md:col-span-2">${product.price}</p>
-                  <p className="text-[10px] tracking-[0.24em] text-mist md:col-span-1">
-                    {product.status === "available" ? "ON THE RAIL" : "HELD"}
-                  </p>
+                  <div className="md:col-span-1">
+                    <p className="text-[10px] tracking-[0.24em] text-mist">
+                      {product.status === "available" ? "ON THE RAIL" : "HELD"}
+                    </p>
+                    <p className="mt-2 text-[10px] tracking-[0.2em] text-stone">
+                      {isSoldOut(product)
+                        ? "SOLD OUT"
+                        : `${String(stockTotal(product) ?? 0).padStart(2, "0")} ON HAND`}
+                    </p>
+                  </div>
                   <div className="flex gap-6 md:col-span-2 md:justify-end">
                     <Link
                       href={`/atelier/line/${product.id}`}

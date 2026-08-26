@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ProductPhoto } from "@/components/ProductPhoto";
-import type { CatalogProduct } from "@/lib/products";
+import { isSoldOut, type CatalogProduct } from "@/lib/products";
 
 type ShopTileProps = {
   product: CatalogProduct;
@@ -44,7 +44,9 @@ export const ShopTile = ({ product, index }: ShopTileProps) => {
         </h2>
         <p className="shrink-0 font-serif text-lg italic text-ivory">${product.price}</p>
       </div>
-      <p className="mt-2 text-[10px] tracking-[0.22em] text-mist">{product.color}</p>
+      <p className="mt-2 text-[10px] tracking-[0.22em] text-mist">
+        {isSoldOut(product) ? "SOLD OUT" : product.color}
+      </p>
     </Link>
   );
 };
