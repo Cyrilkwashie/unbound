@@ -16,6 +16,9 @@ export type BagItem = {
   size: string;
   color: string;
   qty: number;
+  image: string;
+  imageFit?: "contain" | "cover";
+  imageBg?: string;
 };
 
 const sameMark = (a: BagItem, b: Pick<BagItem, "id" | "size" | "color">) =>

@@ -1,7 +1,9 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { useBag } from "@/context/BagContext";
+import { ProductPhoto } from "@/components/ProductPhoto";
 import { QtyControl } from "@/components/QtyControl";
 
 export const BagDrawer = () => {
@@ -49,33 +51,50 @@ export const BagDrawer = () => {
                   {items.map((item) => (
                     <li
                       key={`${item.id}-${item.color}-${item.size}`}
-                      className="border-b border-ivory/10 pb-6"
+                      className="grid grid-cols-[5.5rem_1fr] gap-5 border-b border-ivory/10 pb-6"
                     >
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <p className="text-[11px] tracking-[0.22em] text-ivory">{item.name}</p>
-                          <p className="mt-2 text-[10px] tracking-[0.18em] text-mist">
-                            {item.color} / {item.size}
-                          </p>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => removeItem(item)}
-                          className="text-[10px] tracking-[0.22em] text-mist"
-                          data-cursor="VIEW"
-                        >
-                          DROP
-                        </button>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between">
-                        <QtyControl
-                          value={item.qty}
-                          min={1}
-                          max={20}
-                          label={`${item.name} ${item.size}`}
-                          onChange={(next) => setQty(item, next)}
+                      <Link
+                        href={`/shop/${item.id}`}
+                        onClick={closeBag}
+                        className="relative overflow-hidden"
+                        style={{ backgroundColor: item.imageBg ?? "#cfc9c0" }}
+                        data-cursor="VIEW"
+                      >
+                        <ProductPhoto
+                          src={item.image}
+                          alt={item.name}
+                          className={`aspect-[4/5] w-full object-center ${
+                            item.imageFit === "contain" ? "object-contain p-2" : "object-cover"
+                          }`}
                         />
-                        <p className="font-serif italic text-ivory">${item.price * item.qty}</p>
+                      </Link>
+                      <div className="min-w-0">
+                        <div className="flex items-start justify-between gap-4">
+                          <div>
+                            <p className="text-[11px] tracking-[0.22em] text-ivory">{item.name}</p>
+                            <p className="mt-2 text-[10px] tracking-[0.18em] text-mist">
+                              {item.color} / {item.size}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => removeItem(item)}
+                            className="text-[10px] tracking-[0.22em] text-mist"
+                            data-cursor="VIEW"
+                          >
+                            DROP
+                          </button>
+                        </div>
+                        <div className="mt-4 flex items-center justify-between">
+                          <QtyControl
+                            value={item.qty}
+                            min={1}
+                            max={20}
+                            label={`${item.name} ${item.size}`}
+                            onChange={(next) => setQty(item, next)}
+                          />
+                          <p className="font-serif italic text-ivory">${item.price * item.qty}</p>
+                        </div>
                       </div>
                     </li>
                   ))}

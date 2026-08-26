@@ -83,6 +83,9 @@ export const ProductCard = ({ product, reverse = false, preview = false }: Produ
         size,
         color: mark,
         qty,
+        image: product.image,
+        imageFit: product.imageFit,
+        imageBg: product.imageBg,
       });
     }
     setQtys({});
