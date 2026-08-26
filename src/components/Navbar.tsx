@@ -94,10 +94,23 @@ export const Navbar = () => {
         } ${navVisible ? "opacity-100" : "opacity-0"}`}
       >
         <nav className="grid grid-cols-3 items-center px-5 py-5 md:px-10">
+          <button
+            type="button"
+            className="justify-self-start md:hidden"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <span className="flex h-4 w-6 flex-col justify-between">
+              <span className={`h-px w-full bg-ivory transition-transform duration-500 ${menuOpen ? "translate-y-[7.5px] rotate-45" : ""}`} />
+              <span className={`h-px w-full bg-ivory transition-opacity duration-300 ${menuOpen ? "opacity-0" : "opacity-100"}`} />
+              <span className={`h-px w-full bg-ivory transition-transform duration-500 ${menuOpen ? "-translate-y-[7.5px] -rotate-45" : ""}`} />
+            </span>
+          </button>
+
           <Link
             href="/"
             onClick={goHome}
-            className="justify-self-start font-display text-[11px] tracking-[0.42em] text-ivory"
+            className="justify-self-center font-display text-[11px] tracking-[0.42em] text-ivory md:justify-self-start"
             data-cursor="VIEW"
           >
             UNBOUND
@@ -143,18 +156,6 @@ export const Navbar = () => {
             >
               BAG
               <span className="ml-2 text-mist">{String(count).padStart(2, "0")}</span>
-            </button>
-            <button
-              type="button"
-              className="md:hidden"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              onClick={() => setMenuOpen((open) => !open)}
-            >
-              <span className="flex h-4 w-6 flex-col justify-between">
-                <span className={`h-px w-full bg-ivory transition-transform duration-500 ${menuOpen ? "translate-y-[7.5px] rotate-45" : ""}`} />
-                <span className={`h-px w-full bg-ivory transition-opacity duration-300 ${menuOpen ? "opacity-0" : "opacity-100"}`} />
-                <span className={`h-px w-full bg-ivory transition-transform duration-500 ${menuOpen ? "-translate-y-[7.5px] -rotate-45" : ""}`} />
-              </span>
             </button>
           </div>
         </nav>
