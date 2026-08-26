@@ -67,7 +67,9 @@ export const HomeLooks = ({
             {top.name}
           </h3>
           <p className="mt-6 max-w-sm text-sm leading-7 text-mist">{top.description}</p>
-          <p className="mt-8 font-serif text-2xl italic text-ivory">{money(top.price)}</p>
+          <p className="mt-8 font-serif text-[clamp(2.4rem,4.2vw,3.8rem)] italic leading-none text-ivory">
+            {money(top.price)}
+          </p>
           <Link
             href={`/shop/${top.id}`}
             className="mt-8 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory"
@@ -99,7 +101,9 @@ export const HomeLooks = ({
               {cargo.name}
             </h3>
             <p className="mt-4 max-w-md text-sm leading-7 text-ivory/75">{cargo.description}</p>
-            <p className="mt-6 font-serif text-2xl italic text-ivory">{money(cargo.price)}</p>
+            <p className="mt-6 font-serif text-[clamp(2.4rem,4.2vw,3.8rem)] italic leading-none text-ivory">
+              {money(cargo.price)}
+            </p>
           </div>
         </Link>
       </motion.article>

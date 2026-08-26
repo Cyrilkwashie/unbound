@@ -40,12 +40,14 @@ export const ShopTile = ({ product, index }: ShopTileProps) => {
         />
       </div>
       <div className="mt-5 flex items-baseline justify-between gap-4">
-        <h2 className="font-display text-[13px] tracking-[0.16em] text-ivory">
+        <h2 className="min-w-0 font-display text-[13px] tracking-[0.16em] text-ivory">
           {product.name}
         </h2>
-        <p className="shrink-0 font-serif text-lg italic text-ivory">{money(product.price)}</p>
+        <p className="shrink-0 font-serif text-[clamp(1.85rem,3.4vw,2.5rem)] italic leading-none text-ivory">
+          {money(product.price)}
+        </p>
       </div>
-      <p className="mt-2 text-[10px] tracking-[0.22em] text-mist">
+      <p className="mt-3 text-[10px] tracking-[0.22em] text-mist">
         {isSoldOut(product) ? "SOLD OUT" : product.color}
       </p>
     </Link>

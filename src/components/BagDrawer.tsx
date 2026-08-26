@@ -94,7 +94,7 @@ export const BagDrawer = () => {
                             label={`${item.name} ${item.size}`}
                             onChange={(next) => setQty(item, next)}
                           />
-                          <p className="font-serif italic text-ivory">{money(item.price * item.qty)}</p>
+                          <p className="font-serif text-2xl italic text-ivory">{money(item.price * item.qty)}</p>
                         </div>
                       </div>
                     </li>
@@ -104,9 +104,11 @@ export const BagDrawer = () => {
             </div>
 
             <div className="border-t border-ivory/10 pt-6">
-              <div className="flex items-center justify-between text-[11px] tracking-[0.22em]">
-                <span className="text-mist">TOTAL</span>
-                <span className="text-ivory">{money(total)}</span>
+              <div className="flex items-baseline justify-between gap-4">
+                <span className="text-[11px] tracking-[0.22em] text-mist">TOTAL</span>
+                <span className="font-serif text-[clamp(1.8rem,4vw,2.6rem)] italic leading-none text-ivory">
+                  {money(total)}
+                </span>
               </div>
               <button
                 type="button"

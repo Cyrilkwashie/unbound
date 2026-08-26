@@ -127,7 +127,9 @@ export const ProductCard = ({ product, reverse = false, preview = false }: Produ
           {product.name}
         </h2>
         <p className="mt-6 max-w-md text-sm leading-7 text-mist">{product.description}</p>
-        <p className="mt-10 font-serif text-3xl italic text-ivory">{money(product.price)}</p>
+        <p className="mt-8 font-serif text-[clamp(2.6rem,5.5vw,4.4rem)] italic leading-[0.9] text-ivory">
+          {money(product.price)}
+        </p>
 
         {palette.length > 0 ? (
           <div className="mt-10">
