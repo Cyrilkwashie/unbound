@@ -16,6 +16,7 @@ import {
   type CatalogProduct,
   type GarmentSize,
 } from "@/lib/products";
+import { money } from "@/lib/money";
 
 type ProductCardProps = {
   product: CatalogProduct;
@@ -126,7 +127,7 @@ export const ProductCard = ({ product, reverse = false, preview = false }: Produ
           {product.name}
         </h2>
         <p className="mt-6 max-w-md text-sm leading-7 text-mist">{product.description}</p>
-        <p className="mt-10 font-serif text-3xl italic text-ivory">${product.price}</p>
+        <p className="mt-10 font-serif text-3xl italic text-ivory">{money(product.price)}</p>
 
         {palette.length > 0 ? (
           <div className="mt-10">

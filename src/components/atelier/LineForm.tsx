@@ -366,7 +366,7 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
         </div>
         <div>
           <label className={label} htmlFor="piece-price">
-            PRICE
+            PRICE — GH₵
           </label>
           <input
             id="piece-price"

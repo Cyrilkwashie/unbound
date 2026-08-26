@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ProductPhoto } from "@/components/ProductPhoto";
 import { isSoldOut, type CatalogProduct } from "@/lib/products";
+import { money } from "@/lib/money";
 
 type ShopTileProps = {
   product: CatalogProduct;
@@ -42,7 +43,7 @@ export const ShopTile = ({ product, index }: ShopTileProps) => {
         <h2 className="font-display text-[13px] tracking-[0.16em] text-ivory">
           {product.name}
         </h2>
-        <p className="shrink-0 font-serif text-lg italic text-ivory">${product.price}</p>
+        <p className="shrink-0 font-serif text-lg italic text-ivory">{money(product.price)}</p>
       </div>
       <p className="mt-2 text-[10px] tracking-[0.22em] text-mist">
         {isSoldOut(product) ? "SOLD OUT" : product.color}

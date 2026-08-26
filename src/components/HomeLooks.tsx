@@ -7,6 +7,7 @@ import {
   SHOP_CATEGORIES,
   type CatalogProduct,
 } from "@/lib/products";
+import { money } from "@/lib/money";
 
 const fade = {
   initial: { opacity: 0, y: 28 },
@@ -66,7 +67,7 @@ export const HomeLooks = ({
             {top.name}
           </h3>
           <p className="mt-6 max-w-sm text-sm leading-7 text-mist">{top.description}</p>
-          <p className="mt-8 font-serif text-2xl italic text-ivory">${top.price}</p>
+          <p className="mt-8 font-serif text-2xl italic text-ivory">{money(top.price)}</p>
           <Link
             href={`/shop/${top.id}`}
             className="mt-8 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory"
@@ -98,7 +99,7 @@ export const HomeLooks = ({
               {cargo.name}
             </h3>
             <p className="mt-4 max-w-md text-sm leading-7 text-ivory/75">{cargo.description}</p>
-            <p className="mt-6 font-serif text-2xl italic text-ivory">${cargo.price}</p>
+            <p className="mt-6 font-serif text-2xl italic text-ivory">{money(cargo.price)}</p>
           </div>
         </Link>
       </motion.article>

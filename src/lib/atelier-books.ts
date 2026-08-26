@@ -1,7 +1,6 @@
 import type { ProductCategory } from "@/lib/products";
 
-export const money = (value: number) =>
-  `$${value.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+export { money } from "@/lib/money";
 
 export type OrderStatus = "paid" | "cutting" | "sent" | "void";
 

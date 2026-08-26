@@ -7,6 +7,7 @@ import { isAtelierSession } from "@/lib/atelier";
 import { ATELIER_LOGIN } from "@/lib/atelier-guard";
 import { readLine } from "@/lib/house-store";
 import { LOW_STOCK, isSoldOut, stockTotal, type CatalogProduct } from "@/lib/products";
+import { money } from "@/lib/money";
 
 type LinePageProps = {
   products: CatalogProduct[];
@@ -89,7 +90,7 @@ export default function AtelierLinePage({ products, featuredIds }: LinePageProps
                       {(product.sizes ?? []).join("  ") || "—"}
                     </p>
                   </div>
-                  <p className="font-serif text-2xl italic text-ivory md:col-span-2">${product.price}</p>
+                  <p className="font-serif text-2xl italic text-ivory md:col-span-2">{money(product.price)}</p>
                   <div className="md:col-span-1">
                     <p className="text-[10px] tracking-[0.24em] text-mist">
                       {product.status === "available" ? "ON THE RAIL" : "HELD"}

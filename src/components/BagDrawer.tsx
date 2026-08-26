@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useBag } from "@/context/BagContext";
 import { ProductPhoto } from "@/components/ProductPhoto";
 import { QtyControl } from "@/components/QtyControl";
+import { money } from "@/lib/money";
 
 export const BagDrawer = () => {
   const { items, isOpen, closeBag, setQty, removeItem } = useBag();
@@ -93,7 +94,7 @@ export const BagDrawer = () => {
                             label={`${item.name} ${item.size}`}
                             onChange={(next) => setQty(item, next)}
                           />
-                          <p className="font-serif italic text-ivory">${item.price * item.qty}</p>
+                          <p className="font-serif italic text-ivory">{money(item.price * item.qty)}</p>
                         </div>
                       </div>
                     </li>
@@ -105,7 +106,7 @@ export const BagDrawer = () => {
             <div className="border-t border-ivory/10 pt-6">
               <div className="flex items-center justify-between text-[11px] tracking-[0.22em]">
                 <span className="text-mist">TOTAL</span>
-                <span className="text-ivory">${total}</span>
+                <span className="text-ivory">{money(total)}</span>
               </div>
               <button
                 type="button"
