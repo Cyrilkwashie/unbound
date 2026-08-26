@@ -2,9 +2,12 @@ import Head from "next/head";
 import type { GetServerSideProps } from "next";
 import { AtelierShell } from "@/components/atelier/AtelierShell";
 import {
+  averageTicket,
   categoryTakings,
   money,
+  ticketCount,
   tillMonths,
+  tillToday,
   tillTotal,
   type AtelierOrder,
 } from "@/lib/atelier-books";
@@ -18,6 +21,9 @@ type TillPageProps = {
 
 export default function AtelierTillPage({ orders }: TillPageProps) {
   const total = tillTotal(orders);
+  const today = tillToday(orders);
+  const count = ticketCount(orders);
+  const average = averageTicket(orders);
   const months = tillMonths(orders);
   const peak = Math.max(1, ...months.map((month) => month.value));
   const categories = categoryTakings(orders);
@@ -32,16 +38,31 @@ export default function AtelierTillPage({ orders }: TillPageProps) {
         <title>The Till — UNBOUND</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <AtelierShell title="THE TILL" kicker="SALES & REVENUE — FROM THE BOOK">
+      <AtelierShell title="THE TILL" kicker="TAKINGS — WHAT THE BOOK HOLDS">
         <p className="max-w-md text-sm leading-7 text-mist">
-          Every ticket you write in Orders counts here. The bag will join this till when
-          checkout is live.
+          Live tickets only. A voided sale leaves the till. The bag still sits outside this book
+          until checkout is live.
         </p>
 
         <p className="mt-14 font-display text-[clamp(2.4rem,8vw,6rem)] font-light tracking-[0.08em] text-ivory">
           {money(total)}
         </p>
-        <p className="mt-3 text-[10px] tracking-[0.28em] text-mist">TOTAL TAKINGS</p>
+        <p className="mt-3 text-[10px] tracking-[0.28em] text-mist">IN THE BOOK</p>
+
+        <ul className="mt-14 grid grid-cols-2 gap-px bg-ivory/10 lg:grid-cols-3">
+          {[
+            { label: "TODAY", value: money(today) },
+            { label: "TICKETS", value: String(count).padStart(2, "0") },
+            { label: "AVERAGE", value: money(average) },
+          ].map((stat) => (
+            <li key={stat.label} className="bg-void-0 px-5 py-8 md:px-7">
+              <p className="text-[10px] tracking-[0.28em] text-mist">{stat.label}</p>
+              <p className="mt-4 font-display text-[clamp(1.4rem,2.4vw,2rem)] tracking-[0.08em] text-ivory">
+                {stat.value}
+              </p>
+            </li>
+          ))}
+        </ul>
 
         <section className="mt-20">
           <h2 className="text-[10px] tracking-[0.32em] text-mist">BY MONTH</h2>

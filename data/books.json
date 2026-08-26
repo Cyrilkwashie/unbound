@@ -1,0 +1,158 @@
+{
+  "orders": [
+    {
+      "id": "UB-0004",
+      "placedAt": "2026-08-26",
+      "client": "A. MOREAU",
+      "total": 525,
+      "status": "paid",
+      "source": "manual",
+      "lines": [
+        {
+          "productId": "split-crew",
+          "look": "01",
+          "piece": "SPLIT CREW",
+          "category": "tops",
+          "color": "BLACK",
+          "size": "M",
+          "qty": 2,
+          "unit": 165
+        },
+        {
+          "productId": "angel-pant",
+          "look": "03",
+          "piece": "ANGEL PANT",
+          "category": "bottoms",
+          "color": "BLACK",
+          "size": "M",
+          "qty": 1,
+          "unit": 195
+        }
+      ],
+      "look": "01",
+      "piece": "SPLIT CREW",
+      "productId": "split-crew",
+      "category": "tops",
+      "color": "BLACK",
+      "size": "M",
+      "qty": 3,
+      "channel": "till",
+      "contact": "moreau@studio.mail"
+    },
+    {
+      "id": "UB-0003",
+      "placedAt": "2026-08-25",
+      "look": "01",
+      "piece": "SPLIT CREW",
+      "productId": "split-crew",
+      "category": "tops",
+      "client": "A. MOREAU",
+      "total": 165,
+      "status": "paid",
+      "source": "manual",
+      "color": "BLACK",
+      "size": "M",
+      "qty": 1,
+      "channel": "till",
+      "contact": "moreau@studio.mail",
+      "lines": [
+        {
+          "productId": "split-crew",
+          "look": "01",
+          "piece": "SPLIT CREW",
+          "category": "tops",
+          "color": "BLACK",
+          "size": "M",
+          "qty": 1,
+          "unit": 165
+        }
+      ]
+    },
+    {
+      "id": "UB-0002",
+      "placedAt": "2026-08-24",
+      "look": "03",
+      "piece": "ANGEL PANT",
+      "productId": "angel-pant",
+      "category": "bottoms",
+      "client": "J. KANE",
+      "total": 195,
+      "status": "cutting",
+      "source": "manual",
+      "color": "BLACK",
+      "size": "L",
+      "qty": 1,
+      "channel": "instagram",
+      "note": "Hold at the till — Saturday pickup.",
+      "lines": [
+        {
+          "productId": "angel-pant",
+          "look": "03",
+          "piece": "ANGEL PANT",
+          "category": "bottoms",
+          "color": "BLACK",
+          "size": "L",
+          "qty": 1,
+          "unit": 195
+        }
+      ]
+    },
+    {
+      "id": "UB-0001",
+      "placedAt": "2026-08-22",
+      "look": "08",
+      "piece": "FLAME CREW",
+      "productId": "flame-crew",
+      "category": "tops",
+      "client": "R. VEIL",
+      "total": 165,
+      "status": "sent",
+      "source": "manual",
+      "color": "BLACK",
+      "size": "M",
+      "qty": 1,
+      "channel": "pickup",
+      "lines": [
+        {
+          "productId": "flame-crew",
+          "look": "08",
+          "piece": "FLAME CREW",
+          "category": "tops",
+          "color": "BLACK",
+          "size": "M",
+          "qty": 1,
+          "unit": 165
+        }
+      ]
+    }
+  ],
+  "list": [
+    {
+      "mark": "A. MOREAU",
+      "joined": "25 AUG",
+      "source": "ORDER",
+      "email": "moreau@studio.mail"
+    },
+    {
+      "mark": "J. KANE",
+      "joined": "24 AUG",
+      "source": "THE LIST"
+    },
+    {
+      "mark": "R. VEIL",
+      "joined": "22 AUG",
+      "source": "ORDER"
+    }
+  ],
+  "letters": [
+    {
+      "id": "LT-001",
+      "from": "studio inquiry",
+      "received": "21 AUG",
+      "subject": "Stockist — Paris",
+      "body": "Asking for wholesale on Collection 001. Held until you answer.",
+      "unread": false,
+      "email": "paris@atelier.mail"
+    }
+  ]
+}

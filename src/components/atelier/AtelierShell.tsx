@@ -5,13 +5,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 export const ATELIER_NAV = [
-  { href: "/atelier/desk", label: "DESK", hint: "Overview" },
-  { href: "/atelier/line", label: "THE LINE", hint: "Add & edit products" },
-  { href: "/atelier/till", label: "THE TILL", hint: "Sales & revenue" },
-  { href: "/atelier/orders", label: "ORDERS", hint: "Sales & tickets" },
+  { href: "/atelier/desk", label: "DESK", hint: "This morning" },
+  { href: "/atelier/line", label: "THE LINE", hint: "The rail" },
+  { href: "/atelier/till", label: "THE TILL", hint: "Takings" },
+  { href: "/atelier/orders", label: "ORDERS", hint: "Tickets" },
   { href: "/atelier/list", label: "THE LIST", hint: "Clients" },
-  { href: "/atelier/letters", label: "LETTERS", hint: "Messages" },
-  { href: "/atelier/house", label: "HOUSE", hint: "Settings" },
+  { href: "/atelier/letters", label: "LETTERS", hint: "The post" },
+  { href: "/atelier/house", label: "HOUSE", hint: "How it stands" },
 ] as const;
 
 type AtelierShellProps = {

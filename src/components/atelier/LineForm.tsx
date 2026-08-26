@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { ProductCard } from "@/components/ProductCard";
 import { ColorChip } from "@/components/ColorChip";
+import { HouseSelect } from "@/components/HouseSelect";
 import { useLenis } from "@/context/LenisContext";
 import {
   DEFAULT_ON_HAND,
@@ -20,8 +21,6 @@ import {
 
 const field =
   "mt-4 w-full border-b border-ivory/20 bg-transparent pb-3 text-sm tracking-[0.08em] text-ivory outline-none";
-const selectField =
-  "mt-4 w-full appearance-none border-b border-ivory/20 bg-void-0 pb-3 text-sm tracking-[0.08em] text-ivory outline-none";
 const label = "mt-10 block text-[10px] tracking-[0.32em] text-mist first:mt-0";
 
 type Swatch = { key: string; label: string; hex: string };
@@ -65,6 +64,9 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
   const [error, setError] = useState("");
   const [featured, setFeatured] = useState(startedFeatured);
   const [image, setImage] = useState(product?.image ?? "/shop/split-crew.png");
+  const [category, setCategory] = useState<ProductCategory>(product?.category ?? "tops");
+  const [rail, setRail] = useState<CatalogProduct["status"]>(product?.status ?? "available");
+  const [imageFit, setImageFit] = useState<"contain" | "cover">(product?.imageFit ?? "contain");
   const [colors, setColors] = useState<Swatch[]>(() => defaultSwatches(product));
   const [sizes, setSizes] = useState<GarmentSize[]>(() => defaultSizes(product));
   const [stock, setStock] = useState<Record<string, number>>(() => defaultStockMap(product));
@@ -395,30 +397,32 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
           <label className={label} htmlFor="piece-category">
             DEPARTMENT
           </label>
-          <select
+          <HouseSelect
             id="piece-category"
             name="category"
-            defaultValue={product?.category ?? "tops"}
-            className={selectField}
-          >
-            <option value="tops">TOPS</option>
-            <option value="bottoms">BOTTOMS</option>
-            <option value="outer">OUTER</option>
-          </select>
+            value={category}
+            onChange={(next) => setCategory(next as ProductCategory)}
+            options={[
+              { value: "tops", label: "TOPS" },
+              { value: "bottoms", label: "BOTTOMS" },
+              { value: "outer", label: "OUTER" },
+            ]}
+          />
         </div>
         <div>
           <label className={label} htmlFor="piece-status">
             RAIL
           </label>
-          <select
+          <HouseSelect
             id="piece-status"
             name="status"
-            defaultValue={product?.status ?? "available"}
-            className={selectField}
-          >
-            <option value="available">ON THE RAIL</option>
-            <option value="forthcoming">FORTHCOMING</option>
-          </select>
+            value={rail}
+            onChange={(next) => setRail(next as CatalogProduct["status"])}
+            options={[
+              { value: "available", label: "ON THE RAIL" },
+              { value: "forthcoming", label: "FORTHCOMING" },
+            ]}
+          />
         </div>
       </div>
 
@@ -679,15 +683,16 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
           <label className={label} htmlFor="piece-fit">
             FIT
           </label>
-          <select
+          <HouseSelect
             id="piece-fit"
             name="imageFit"
-            defaultValue={product?.imageFit ?? "contain"}
-            className={selectField}
-          >
-            <option value="contain">CONTAIN</option>
-            <option value="cover">COVER</option>
-          </select>
+            value={imageFit}
+            onChange={(next) => setImageFit(next as "contain" | "cover")}
+            options={[
+              { value: "contain", label: "CONTAIN" },
+              { value: "cover", label: "COVER" },
+            ]}
+          />
         </div>
         <div>
           <label className={label} htmlFor="piece-ground">

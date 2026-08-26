@@ -1,11 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Link from "next/link";
 
 export const Footer = () => {
   const [email, setEmail] = useState("");
   const [joined, setJoined] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (busy || joined) return;
+    const value = email.trim();
+    if (!value) return;
+    setBusy(true);
+    setError("");
+    const response = await fetch("/api/list", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: value, website: "" }),
+    });
+    if (!response.ok) {
+      const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+      setError(payload?.error ?? "Could not join.");
+      setBusy(false);
+      return;
+    }
+    setJoined(true);
+    setBusy(false);
+  };
 
   return (
     <footer className="border-t border-ivory/10 bg-void-1 px-5 py-20 md:px-10 md:py-28">
@@ -17,14 +41,7 @@ export const Footer = () => {
           </p>
         </div>
 
-        <form
-          className="w-full max-w-md"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (!email.trim()) return;
-            setJoined(true);
-          }}
-        >
+        <form className="w-full max-w-md" onSubmit={submit}>
           <label htmlFor="list-email" className="text-[10px] tracking-[0.28em] text-mist">
             ENTER THE LIST
           </label>
@@ -35,16 +52,19 @@ export const Footer = () => {
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               placeholder="Email"
-              className="w-full bg-transparent pb-3 text-sm text-ivory outline-none placeholder:text-stone"
+              disabled={joined}
+              className="w-full bg-transparent pb-3 text-sm text-ivory outline-none placeholder:text-stone disabled:text-mist"
             />
             <button
               type="submit"
-              className="pb-3 text-[10px] tracking-[0.28em] text-ivory"
+              disabled={busy || joined}
+              className="pb-3 text-[10px] tracking-[0.28em] text-ivory disabled:text-mist"
               data-cursor="VIEW"
             >
-              {joined ? "JOINED" : "JOIN"}
+              {joined ? "JOINED" : busy ? "…" : "JOIN"}
             </button>
           </div>
+          {error ? <p className="mt-3 text-[11px] tracking-[0.16em] text-mist">{error}</p> : null}
         </form>
       </div>
 

@@ -1,4 +1,5 @@
 import { InnerPage } from "@/components/InnerPage";
+import { ContactForm } from "@/components/ContactForm";
 
 const CHANNELS = [
   {
@@ -30,7 +31,11 @@ export default function ContactPage() {
           Write. Follow. Stay close to the shop.
         </p>
 
-        <ul className="mt-20">
+        <div className="mt-20">
+          <ContactForm />
+        </div>
+
+        <ul className="mt-24">
           {CHANNELS.map((channel) => (
             <li key={channel.label} className="border-t border-ivory/10 last:border-b">
               <a

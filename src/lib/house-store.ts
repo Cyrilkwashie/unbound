@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { dirname, join } from "path";
-import { SEED_BOOKS, type HouseBooks } from "@/lib/atelier-books";
+import { SEED_BOOKS, normalizeBooks, type HouseBooks } from "@/lib/atelier-books";
 import {
   SEED_CATALOG,
   SEED_FEATURED_IDS,
@@ -70,8 +70,8 @@ export const writeLine = (line: LineFile) => {
 };
 
 export const readBooks = (): HouseBooks =>
-  readJson<HouseBooks>(runtimeBooks) ?? readJson<HouseBooks>(committedBooks) ?? SEED_BOOKS;
+  normalizeBooks(readJson<HouseBooks>(runtimeBooks) ?? readJson<HouseBooks>(committedBooks) ?? SEED_BOOKS);
 
 export const writeBooks = (books: HouseBooks) => {
-  writeSafe(runtimeBooks, join(tmpdir(), "unbound-books.json"), books);
+  writeSafe(runtimeBooks, join(tmpdir(), "unbound-books.json"), normalizeBooks(books));
 };

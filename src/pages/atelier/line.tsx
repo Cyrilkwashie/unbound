@@ -6,7 +6,7 @@ import { ProductPhoto } from "@/components/ProductPhoto";
 import { isAtelierSession } from "@/lib/atelier";
 import { ATELIER_LOGIN } from "@/lib/atelier-guard";
 import { readLine } from "@/lib/house-store";
-import { isSoldOut, stockTotal, type CatalogProduct } from "@/lib/products";
+import { LOW_STOCK, isSoldOut, stockTotal, type CatalogProduct } from "@/lib/products";
 
 type LinePageProps = {
   products: CatalogProduct[];
@@ -23,17 +23,26 @@ export default function AtelierLinePage({ products, featuredIds }: LinePageProps
       <AtelierShell title="THE LINE" kicker="PRODUCTS — WHAT THE SHOP SHOWS">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <p className="max-w-md text-sm leading-7 text-mist">
-            Put a piece on the rail, edit it, pull it. The public shop reads this line — not a
-            frozen file.
+            Put a piece on the rail, edit it, pull it. Goods in when a drop arrives. The shop
+            reads this line — not a frozen file.
           </p>
-          <Link
-            href="/atelier/line/cut"
-            className="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory"
-            data-cursor="VIEW"
-          >
-            PUT ON THE RAIL
-            <span className="block h-px w-8 bg-ivory/70" />
-          </Link>
+          <div className="flex flex-wrap gap-8">
+            <Link
+              href="/atelier/line/in"
+              className="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-mist"
+              data-cursor="VIEW"
+            >
+              GOODS IN
+            </Link>
+            <Link
+              href="/atelier/line/cut"
+              className="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory"
+              data-cursor="VIEW"
+            >
+              PUT ON THE RAIL
+              <span className="block h-px w-8 bg-ivory/70" />
+            </Link>
+          </div>
         </div>
 
         <p className="mt-10 text-[10px] tracking-[0.28em] text-mist">
@@ -88,7 +97,9 @@ export default function AtelierLinePage({ products, featuredIds }: LinePageProps
                     <p className="mt-2 text-[10px] tracking-[0.2em] text-stone">
                       {isSoldOut(product)
                         ? "SOLD OUT"
-                        : `${String(stockTotal(product) ?? 0).padStart(2, "0")} ON HAND`}
+                        : (product.stock ?? []).some((cell) => cell.count > 0 && cell.count <= LOW_STOCK)
+                          ? `LOW · ${String(stockTotal(product) ?? 0).padStart(2, "0")}`
+                          : `${String(stockTotal(product) ?? 0).padStart(2, "0")} ON HAND`}
                     </p>
                   </div>
                   <div className="flex gap-6 md:col-span-2 md:justify-end">

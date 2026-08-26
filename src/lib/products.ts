@@ -85,6 +85,45 @@ export const stockTotal = (product: Pick<CatalogProduct, "stock">): number | nul
 export const isSoldOut = (product: Pick<CatalogProduct, "stock">) =>
   stockTotal(product) === 0;
 
+export const LOW_STOCK = 2;
+
+export type RailAlert = {
+  id: string;
+  look: string;
+  name: string;
+  kind: "sold" | "low";
+  detail: string;
+};
+
+export const railAlerts = (products: CatalogProduct[]): RailAlert[] => {
+  const alerts: RailAlert[] = [];
+  for (const product of products) {
+    if (!product.stock || product.status !== "available") continue;
+    if (isSoldOut(product)) {
+      alerts.push({
+        id: product.id,
+        look: product.look,
+        name: product.name,
+        kind: "sold",
+        detail: "SOLD OUT",
+      });
+      continue;
+    }
+    for (const cell of product.stock) {
+      if (cell.count > 0 && cell.count <= LOW_STOCK) {
+        alerts.push({
+          id: product.id,
+          look: product.look,
+          name: product.name,
+          kind: "low",
+          detail: `${cell.color} / ${cell.size} · ${String(cell.count).padStart(2, "0")}`,
+        });
+      }
+    }
+  }
+  return alerts;
+};
+
 export const ensureStock = (
   colors: { label: string }[],
   sizes: GarmentSize[],
@@ -137,6 +176,23 @@ export const takeStock = (
   const index = next.findIndex((cell) => cell.color.toUpperCase() === mark && cell.size === size);
   if (index < 0 || next[index].count < qty) return { error: "None left in that mark." };
   next[index] = { ...next[index], count: next[index].count - qty };
+  return { ...product, stock: next };
+};
+
+export const putStock = (
+  product: CatalogProduct,
+  color: string,
+  size: GarmentSize,
+  qty = 1
+): CatalogProduct | { error: string } => {
+  if (!product.stock) return product;
+  const count = Math.floor(Number(qty) || 0);
+  if (count < 1) return { error: "Count has to be at least one." };
+  const mark = color.trim().toUpperCase();
+  const next = product.stock.map((cell) => ({ ...cell }));
+  const index = next.findIndex((cell) => cell.color.toUpperCase() === mark && cell.size === size);
+  if (index < 0) return { error: "That mark is not on this piece." };
+  next[index] = { ...next[index], count: next[index].count + count };
   return { ...product, stock: next };
 };
 
