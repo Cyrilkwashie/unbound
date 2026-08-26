@@ -27,7 +27,7 @@ const FrameSequenceContext = createContext<FrameSequenceContextValue>({
 });
 
 const MIN_LOADER_MS = 1100;
-const LOADER_TIMEOUT_MS = 24000;
+const LOADER_TIMEOUT_MS = 9000;
 
 export const FrameSequenceProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();

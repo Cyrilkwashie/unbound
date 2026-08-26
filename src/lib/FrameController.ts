@@ -13,8 +13,8 @@ const isTouchDevice = () => {
   return window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
 };
 
-const concurrency = () => (isTouchDevice() ? 6 : 12);
-const warmAhead = () => (isTouchDevice() ? 18 : 36);
+const concurrency = () => (isTouchDevice() ? 4 : 8);
+const cacheLimit = () => (isTouchDevice() ? 28 : 52);
 
 export class FrameController {
   private cache = new Map<number, HTMLImageElement>();
@@ -66,7 +66,6 @@ export class FrameController {
     this.targetFrame = clamp(next, FRAME_START, FRAME_START + FRAME_COUNT - 1);
     this.scheduleDraw();
     this.scheduleNearby();
-    this.scheduleWarm();
   }
 
   setViewScale(scale: number) {
@@ -81,7 +80,7 @@ export class FrameController {
   }
 
   async preloadEssential(onProgress?: LoadProgressHandler) {
-    const frames = this.allFrames();
+    const frames = this.essentialFrames();
     let loaded = 0;
     const total = frames.length;
     onProgress?.(0, total);
@@ -91,21 +90,48 @@ export class FrameController {
       loaded += 1;
       onProgress?.(loaded, total);
     });
-
-    if (this.destroyed) return;
-    await this.warmRange(FRAME_START, FRAME_START + warmAhead() - 1);
   }
 
   startBackgroundFill() {
-    const remaining = this.allFrames().filter(
-      (frame) => !this.cache.has(frame) && !this.failed.has(frame)
-    );
-    if (remaining.length === 0) return;
-    void this.mapPool(remaining, concurrency(), (frame) => this.loadFrame(frame));
+    const remaining: number[] = [];
+    for (let i = FRAME_START; i < FRAME_START + FRAME_COUNT; i += 1) {
+      if (!this.cache.has(i) && !this.failed.has(i)) remaining.push(i);
+    }
+
+    const tick = () => {
+      if (this.destroyed || remaining.length === 0) return;
+      remaining.sort(
+        (a, b) => Math.abs(a - this.targetFrame) - Math.abs(b - this.targetFrame)
+      );
+      const batch = remaining.splice(0, concurrency());
+      void this.mapPool(batch, concurrency(), (frame) => this.loadFrame(frame)).then(
+        () => {
+          this.evict();
+          this.backgroundTimer = window.setTimeout(tick, isTouchDevice() ? 80 : 32);
+        }
+      );
+    };
+
+    tick();
   }
 
-  private allFrames() {
-    return Array.from({ length: FRAME_COUNT }, (_, i) => FRAME_START + i);
+  private essentialFrames() {
+    const frames = new Set<number>();
+    frames.add(FRAME_START);
+    frames.add(FRAME_START + FRAME_COUNT - 1);
+    frames.add(FEATURED_FRAMES.reducedMotion);
+
+    const step = isTouchDevice() ? 12 : 8;
+    for (let i = FRAME_START; i < FRAME_START + FRAME_COUNT; i += step) {
+      frames.add(i);
+    }
+
+    const firstBurst = isTouchDevice() ? 16 : 28;
+    for (let i = FRAME_START; i < FRAME_START + firstBurst; i += 1) {
+      frames.add(i);
+    }
+
+    return Array.from(frames).sort((a, b) => a - b);
   }
 
   private loadFrame(frame: number) {
@@ -117,16 +143,24 @@ export class FrameController {
     const promise = new Promise<HTMLImageElement | null>((resolve) => {
       const img = new Image();
       img.decoding = "async";
-      if (frame <= FRAME_START + warmAhead()) img.fetchPriority = "high";
       img.onload = () => {
-        this.inflight.delete(frame);
-        if (this.destroyed) {
-          resolve(null);
-          return;
+        const commit = () => {
+          this.inflight.delete(frame);
+          if (this.destroyed) {
+            resolve(null);
+            return;
+          }
+          this.cache.set(frame, img);
+          this.evict();
+          if (frame === this.targetFrame) this.scheduleDraw(true);
+          resolve(img);
+        };
+
+        if (img.decode) {
+          img.decode().then(commit).catch(commit);
+        } else {
+          commit();
         }
-        this.cache.set(frame, img);
-        if (frame === this.targetFrame) this.scheduleDraw(true);
-        resolve(img);
       };
       img.onerror = () => {
         this.inflight.delete(frame);
@@ -144,43 +178,16 @@ export class FrameController {
     if (this.nearbyRaf) return;
     this.nearbyRaf = requestAnimationFrame(() => {
       this.nearbyRaf = 0;
-      const last = FRAME_START + FRAME_COUNT - 1;
-      const ahead = isTouchDevice() ? 24 : 40;
-      const behind = isTouchDevice() ? 8 : 12;
+      const radius = isTouchDevice() ? 10 : 16;
       const queue: number[] = [];
-      for (let d = 0; d <= ahead; d += 1) {
-        const frame = this.targetFrame + d;
-        if (frame <= last) queue.push(frame);
-      }
-      for (let d = 1; d <= behind; d += 1) {
-        const frame = this.targetFrame - d;
-        if (frame >= FRAME_START) queue.push(frame);
+      for (let d = 0; d <= radius; d += 1) {
+        const ahead = this.targetFrame + d;
+        const behind = this.targetFrame - d;
+        if (ahead <= FRAME_START + FRAME_COUNT - 1) queue.push(ahead);
+        if (d !== 0 && behind >= FRAME_START) queue.push(behind);
       }
       void this.mapPool(queue, concurrency(), (frame) => this.loadFrame(frame));
     });
-  }
-
-  private scheduleWarm() {
-    void this.warmRange(this.targetFrame, this.targetFrame + warmAhead() - 1);
-  }
-
-  private async warmRange(from: number, to: number) {
-    const last = FRAME_START + FRAME_COUNT - 1;
-    const start = clamp(from, FRAME_START, last);
-    const end = clamp(to, FRAME_START, last);
-    const frames: number[] = [];
-    for (let frame = start; frame <= end; frame += 1) frames.push(frame);
-    await this.mapPool(frames, concurrency(), (frame) => this.warm(frame));
-  }
-
-  private async warm(frame: number) {
-    const img = this.cache.get(frame) ?? (await this.loadFrame(frame));
-    if (!img?.decode) return;
-    try {
-      await img.decode();
-    } catch {
-      /* still drawable */
-    }
   }
 
   private scheduleDraw(force = false) {
@@ -262,6 +269,24 @@ export class FrameController {
       if (behind) return behind;
     }
     return null;
+  }
+
+  private evict() {
+    const limit = cacheLimit();
+    while (this.cache.size > limit) {
+      let farthest = -1;
+      let farthestDist = -1;
+      for (const key of Array.from(this.cache.keys())) {
+        const dist = Math.abs(key - this.targetFrame);
+        if (dist <= 3) continue;
+        if (dist > farthestDist) {
+          farthestDist = dist;
+          farthest = key;
+        }
+      }
+      if (farthest === -1) break;
+      this.cache.delete(farthest);
+    }
   }
 
   private async mapPool<T>(
