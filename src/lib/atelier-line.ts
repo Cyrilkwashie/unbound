@@ -61,7 +61,8 @@ export const productFromPayload = (
   const sizes = (body.sizes ?? []).filter(isGarmentSize);
   const kicker =
     body.kicker?.trim().toUpperCase() || `GARMENT ${look} / ${category.toUpperCase()}`;
-  const image = body.image?.trim() || "/shop/split-crew.png";
+  const image = body.image?.trim() ?? "";
+  if (!image) return { error: "Place a still from the device or a link." };
   const imageFit = body.imageFit === "cover" ? "cover" : "contain";
   const imageBg = body.imageBg?.trim() || (category === "bottoms" ? "#eceae4" : "#cfc9c0");
   const status = body.status === "forthcoming" ? "forthcoming" : "available";

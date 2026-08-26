@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductPhoto } from "@/components/ProductPhoto";
 import { ColorChip } from "@/components/ColorChip";
 import { HouseSelect } from "@/components/HouseSelect";
 import { useLenis } from "@/context/LenisContext";
@@ -63,7 +64,10 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [featured, setFeatured] = useState(startedFeatured);
-  const [image, setImage] = useState(product?.image ?? "/shop/split-crew.png");
+  const [image, setImage] = useState(product?.image ?? "");
+  const [link, setLink] = useState("");
+  const [placing, setPlacing] = useState(false);
+  const [stillFrom, setStillFrom] = useState<"device" | "url">("device");
   const [category, setCategory] = useState<ProductCategory>(product?.category ?? "tops");
   const [rail, setRail] = useState<CatalogProduct["status"]>(product?.status ?? "available");
   const [imageFit, setImageFit] = useState<"contain" | "cover">(product?.imageFit ?? "contain");
@@ -80,6 +84,10 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
     const form = new FormData(event.currentTarget);
     if (sizes.length === 0) {
       setError("Choose at least one size.");
+      return;
+    }
+    if (!image.trim()) {
+      setError("Place a still from the device or a link.");
       return;
     }
     const palette = colors
@@ -147,6 +155,24 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
     window.location.assign("/atelier/line");
   };
 
+  const placeStill = async (payload: { filename: string; data: string } | { url: string }) => {
+    setError("");
+    setPlacing(true);
+    const response = await fetch("/api/atelier/upload", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify(payload),
+    });
+    const body = (await response.json().catch(() => null)) as { path?: string; error?: string } | null;
+    setPlacing(false);
+    if (!response.ok || !body?.path) {
+      setError(body?.error ?? "The still could not be placed.");
+      return;
+    }
+    setImage(body.path);
+  };
+
   const upload = async (file: File) => {
     const data = await new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
@@ -154,18 +180,19 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
       reader.onerror = () => reject(new Error("read"));
       reader.readAsDataURL(file);
     });
-    const response = await fetch("/api/atelier/upload", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
-      body: JSON.stringify({ filename: file.name, data }),
-    });
-    const body = (await response.json().catch(() => null)) as { path?: string; error?: string } | null;
-    if (!response.ok || !body?.path) {
-      setError(body?.error ?? "The still could not be placed.");
+    await placeStill({ filename: file.name, data });
+  };
+
+  const placeLink = async () => {
+    const raw = link.trim();
+    if (!raw || placing) return;
+    if (raw.startsWith("/")) {
+      setImage(raw);
+      setError("");
       return;
     }
-    setImage(body.path);
+    const href = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+    await placeStill({ url: href });
   };
 
   const addColor = () => {
@@ -303,6 +330,10 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
   };
 
   const showPreview = () => {
+    if (!image.trim()) {
+      setError("Place a still from the device or a link.");
+      return;
+    }
     const next = pieceFromForm();
     if (next) setPreview(next);
   };
@@ -662,21 +693,120 @@ export const LineForm = ({ product, featured: startedFeatured }: LineFormProps) 
       />
 
       <label className={label}>STILL</label>
-      <p className="mt-4 text-sm tracking-[0.08em] text-ivory">{image}</p>
+      <div className="mt-6 flex items-center gap-8">
+        {(
+          [
+            ["device", "FROM THE DEVICE"],
+            ["url", "FROM A URL"],
+          ] as const
+        ).map(([id, mark]) => {
+          const active = stillFrom === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setStillFrom(id)}
+              className={`relative pb-2 text-[10px] tracking-[0.28em] transition-colors duration-500 ${
+                active ? "text-ivory" : "text-mist hover:text-ivory"
+              }`}
+              data-cursor="VIEW"
+              aria-pressed={active}
+            >
+              {mark}
+              <span
+                className={`absolute inset-x-0 bottom-0 h-px origin-left bg-ivory transition-transform duration-500 ease-cinematic ${
+                  active ? "scale-x-100" : "scale-x-0"
+                }`}
+                aria-hidden
+              />
+            </button>
+          );
+        })}
+      </div>
+      {stillFrom === "device" ? (
+        <label
+          className={`group mt-8 block max-w-[11rem] cursor-pointer ${placing ? "pointer-events-none opacity-50" : ""}`}
+          data-cursor="VIEW"
+          data-cursor-grow="true"
+        >
+          {image ? (
+            <span className="relative block overflow-hidden bg-void-2">
+              <ProductPhoto
+                src={image}
+                alt=""
+                className={`aspect-[4/5] w-full ${
+                  imageFit === "contain" ? "object-contain p-3" : "object-cover"
+                }`}
+              />
+              <span className="absolute inset-x-0 bottom-0 flex items-end bg-gradient-to-t from-void-0/85 to-transparent p-4">
+                <span className="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory">
+                  FROM THE DEVICE
+                  <span className="block h-px w-8 bg-ivory/70" />
+                </span>
+              </span>
+            </span>
+          ) : (
+            <span className="flex aspect-[4/5] flex-col justify-end border border-ivory/25 p-4 transition-colors duration-500 group-hover:border-ivory/55">
+              <span className="inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory">
+                FROM THE DEVICE
+                <span className="block h-px w-8 bg-ivory/70" />
+              </span>
+            </span>
+          )}
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className="sr-only"
+            disabled={placing}
+            onChange={(event) => {
+              const file = event.target.files?.[0];
+              event.target.value = "";
+              if (file) void upload(file);
+            }}
+          />
+        </label>
+      ) : (
+        <div className="mt-8">
+          {image ? (
+            <div className="mb-8 max-w-[11rem] overflow-hidden bg-void-2">
+              <ProductPhoto
+                src={image}
+                alt=""
+                className={`aspect-[4/5] w-full ${
+                  imageFit === "contain" ? "object-contain p-3" : "object-cover"
+                }`}
+              />
+            </div>
+          ) : null}
+          <label className="sr-only" htmlFor="piece-still-url">
+            FROM A URL
+          </label>
+          <input
+            id="piece-still-url"
+            value={link}
+            onChange={(event) => setLink(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key !== "Enter") return;
+              event.preventDefault();
+              void placeLink();
+            }}
+            placeholder="https://"
+            autoComplete="off"
+            className={field}
+          />
+          <button
+            type="button"
+            onClick={() => void placeLink()}
+            disabled={placing || !link.trim()}
+            className="mt-6 inline-flex items-center gap-3 text-[10px] tracking-[0.28em] text-ivory disabled:text-mist"
+            data-cursor="VIEW"
+          >
+            {placing ? "PLACING" : "PLACE THE LINK"}
+            <span className="block h-px w-8 bg-ivory/70" />
+          </button>
+        </div>
+      )}
       <input type="hidden" name="image" value={image} />
-      <label className="mt-6 inline-flex cursor-pointer items-center gap-3 text-[10px] tracking-[0.28em] text-ivory">
-        PLACE A STILL
-        <span className="block h-px w-8 bg-ivory/70" />
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          className="sr-only"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            if (file) void upload(file);
-          }}
-        />
-      </label>
 
       <div className="grid gap-8 md:grid-cols-2">
         <div>
