@@ -48,9 +48,9 @@ export const ShopIndex = ({ products }: ShopIndexProps) => {
 
   return (
     <div>
-      <div className="sticky top-[4.25rem] z-30 border-y border-ivory/10 bg-void-0/85 px-5 py-4 backdrop-blur-md md:px-10">
+      <div className="sticky top-[4.25rem] z-30 border-y border-ivory/10 bg-void-0/85 px-5 py-5 backdrop-blur-md md:px-10">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-wrap items-center gap-6 md:gap-8">
+          <div className="flex flex-wrap items-center gap-6 md:gap-10">
             {SHOP_CATEGORIES.map((item) => {
               const active = category === item.id;
               return (
@@ -58,19 +58,31 @@ export const ShopIndex = ({ products }: ShopIndexProps) => {
                   key={item.id}
                   type="button"
                   onClick={() => selectCategory(item.id)}
-                  className={`text-[10px] tracking-[0.28em] transition-colors duration-500 ${
+                  className={`relative pb-2 text-[10px] tracking-[0.28em] transition-colors duration-500 ${
                     active ? "text-ivory" : "text-mist hover:text-ivory"
                   }`}
                   data-cursor="VIEW"
                   aria-pressed={active}
+                  aria-current={active ? "true" : undefined}
                 >
                   {item.label}
+                  <span
+                    className={`absolute inset-x-0 bottom-0 h-px origin-left bg-ivory transition-transform duration-500 ease-cinematic ${
+                      active ? "scale-x-100" : "scale-x-0"
+                    }`}
+                    aria-hidden
+                  />
                 </button>
               );
             })}
           </div>
-          <p className="text-[10px] tracking-[0.28em] text-mist">
-            {String(pieces.length).padStart(2, "0")} PIECES
+          <p className="flex items-baseline gap-3 text-[10px] tracking-[0.28em] text-mist">
+            <span className="font-serif text-xl italic tracking-normal text-ivory">
+              {SHOP_CATEGORIES.find((item) => item.id === category)?.label ?? "ALL"}
+            </span>
+            <span>
+              {String(pieces.length).padStart(2, "0")} PIECES
+            </span>
           </p>
         </div>
       </div>
